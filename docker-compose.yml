@@ -1,0 +1,14 @@
+services:
+  sinnts-db:
+    image: postgres
+    container_name: sinnts-db
+    ports:
+      - 2524:5432
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: sinnts-grading
+    volumes:
+      - ./db-data/:/data/postgres
+    restart: unless-stopped

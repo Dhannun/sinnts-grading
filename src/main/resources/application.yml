@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: sinnts-grading
+server:
+  port: ${PORT} || 2024
+
