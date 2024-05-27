@@ -2,12 +2,14 @@ package com.sinnts.grading;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
-public class GradingApplication {
+@EnableJpaAuditing
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GradingApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 }

@@ -1,6 +1,32 @@
+server:
+  port: ${PORT}
+  servlet:
+    context-path: /api/v1
 spring:
   application:
     name: sinnts-grading
-server:
-  port: ${PORT} || 2024
 
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+#      ddl-auto: create-drop
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    baselineOnMigrate: true
+    enabled: true
+    user: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    baselineDescription: "init"
+    baselineVersion: 0
