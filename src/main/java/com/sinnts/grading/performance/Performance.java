@@ -36,4 +36,6 @@ public class Performance {
   @Column(name = "last_modified_date", insertable = false)
   private LocalDateTime lastModifiedDate;
 
+  // TODO: Add department rel
+
 }

@@ -1,5 +1,6 @@
 package com.sinnts.grading.department;
 
+import com.sinnts.grading.performance.Performance;
 import com.sinnts.grading.staff.Staff;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,5 +40,8 @@ public class Department {
 
   @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Staff> staffs = new LinkedHashSet<>();
+
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<Performance> performances = new LinkedHashSet<>();
 
 }

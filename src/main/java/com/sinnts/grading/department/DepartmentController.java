@@ -28,12 +28,19 @@ public class DepartmentController {
     return departmentService.addCreateDepartment(request);
   }
 
-  @GetMapping
+  @GetMapping("/all")
   public ResponseEntity<PagedApiResponse<DepartmentResponse>> getAllDepartments(
       @RequestParam(required = false, defaultValue = "1") int page,
       @RequestParam(required = false, defaultValue = "10") int size
   ) {
     return departmentService.getAllDepartments(page, size);
+  }
+
+  @GetMapping()
+  public ResponseEntity<ApiResponse<DepartmentResponse>> getDepartmentById(
+      @RequestParam UUID departmentId
+  ) {
+    return departmentService.getOneDepartmentById(departmentId);
   }
 
   @PutMapping("/{departmentId}")

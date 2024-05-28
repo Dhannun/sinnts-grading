@@ -103,4 +103,19 @@ public class DepartmentService {
             .build()
     );
   }
+
+  public ResponseEntity<ApiResponse<DepartmentResponse>> getOneDepartmentById(UUID departmentId) {
+    Department department = getDepartmentByID(departmentId);
+    DepartmentResponse departmentResponse = INSTANCE.departmentTODepartmentResponse(department);
+    return ResponseEntity.ok(
+        ApiResponse.<DepartmentResponse>builder()
+            .statusCode(HttpStatus.OK.value())
+            .status("Success")
+            .message("Department Retrieved successfully")
+            .data(
+                departmentResponse
+            )
+            .build()
+    );
+  }
 }
