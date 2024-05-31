@@ -11,12 +11,11 @@ import java.util.UUID;
 /**
  * DTO for {@link com.sinnts.grading.department.Department}
  */
-@Getter
-@Setter
-@Builder
-public class DepartmentResponse{
-    private UUID id;
-    private String name;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
+
+public record DepartmentResponse(
+    UUID id,
+    String name,
+    LocalDateTime createdDate,
+    LocalDateTime lastModifiedDate
+) {
 }

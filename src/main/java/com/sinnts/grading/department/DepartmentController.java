@@ -1,6 +1,7 @@
 package com.sinnts.grading.department;
 
 import com.sinnts.grading.department.dto.request.AddDepartmentRequest;
+import com.sinnts.grading.department.dto.request.UpdateDepartmentRequest;
 import com.sinnts.grading.department.dto.response.DepartmentResponse;
 import com.sinnts.grading.iniversal.ApiResponse;
 import com.sinnts.grading.iniversal.PagedApiResponse;
@@ -10,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,7 +25,7 @@ public class DepartmentController {
   public ResponseEntity<ApiResponse<DepartmentResponse>> createDepartment(
       @Valid @RequestBody AddDepartmentRequest request
   ) {
-    return departmentService.addCreateDepartment(request);
+    return departmentService.createDepartment(request);
   }
 
   @GetMapping("/all")
@@ -46,7 +46,7 @@ public class DepartmentController {
   @PutMapping("/{departmentId}")
   public ResponseEntity<ApiResponse<DepartmentResponse>> updateDepartmentName(
       @PathVariable UUID departmentId,
-      @RequestBody AddDepartmentRequest request
+      @RequestBody UpdateDepartmentRequest request
   ) {
     return departmentService.updateDepartmentName(departmentId, request);
   }
@@ -57,4 +57,6 @@ public class DepartmentController {
   ) {
     return departmentService.deleteDepartment(departmentId);
   }
+
+
 }

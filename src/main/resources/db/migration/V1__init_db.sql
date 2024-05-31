@@ -7,6 +7,13 @@ CREATE TABLE sinnts_department
     CONSTRAINT pk_sinnts_department PRIMARY KEY (id)
 );
 
+CREATE TABLE sinnts_department_performances
+(
+    department_id   UUID NOT NULL,
+    performances_id UUID NOT NULL,
+    CONSTRAINT pk_sinnts_department_performances PRIMARY KEY (department_id, performances_id)
+);
+
 CREATE TABLE sinnts_grading_admin
 (
     id                 UUID         NOT NULL,
@@ -66,3 +73,9 @@ ALTER TABLE sinnts_staff_grading
 
 ALTER TABLE sinnts_staff
     ADD CONSTRAINT FK_SINNTS_STAFF_ON_DEPARTMENT FOREIGN KEY (department_id) REFERENCES sinnts_department (id);
+
+ALTER TABLE sinnts_department_performances
+    ADD CONSTRAINT fk_sindepper_on_department FOREIGN KEY (department_id) REFERENCES sinnts_department (id);
+
+ALTER TABLE sinnts_department_performances
+    ADD CONSTRAINT fk_sindepper_on_performance FOREIGN KEY (performances_id) REFERENCES sinnts_staff_performance (id);

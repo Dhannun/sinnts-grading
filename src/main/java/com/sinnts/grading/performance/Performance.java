@@ -1,21 +1,22 @@
 package com.sinnts.grading.performance;
 
+import com.sinnts.grading.department.Department;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "sinnts_staff_performance")
 @EntityListeners(AuditingEntityListener.class)
@@ -36,6 +37,7 @@ public class Performance {
   @Column(name = "last_modified_date", insertable = false)
   private LocalDateTime lastModifiedDate;
 
-  // TODO: Add department rel
+  @ManyToMany(mappedBy = "performances")
+  private Set<Department> departments = new LinkedHashSet<>();
 
 }

@@ -10,5 +10,5 @@ services:
       PGDATA: /var/lib/postgresql/data
       POSTGRES_DB: sinnts-grading
     volumes:
-      - ./db-data/:/data/postgres
+      - ./db-data/:/var/lib/postgresql/data/
     restart: unless-stopped

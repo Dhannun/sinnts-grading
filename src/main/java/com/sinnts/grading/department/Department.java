@@ -41,7 +41,10 @@ public class Department {
   @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Staff> staffs = new LinkedHashSet<>();
 
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @ManyToMany
+  @JoinTable(name = "sinnts_department_performances",
+      joinColumns = @JoinColumn(name = "department_id"),
+      inverseJoinColumns = @JoinColumn(name = "performances_id"))
   private Set<Performance> performances = new LinkedHashSet<>();
 
 }

@@ -1,6 +1,7 @@
 package com.sinnts.grading.department;
 
 import com.sinnts.grading.department.dto.request.AddDepartmentRequest;
+import com.sinnts.grading.department.dto.request.UpdateDepartmentRequest;
 import com.sinnts.grading.department.dto.response.DepartmentResponse;
 import com.sinnts.grading.exceptions.ResourceNotFoundException;
 import com.sinnts.grading.iniversal.ApiResponse;
@@ -29,7 +30,7 @@ public class DepartmentService {
         .orElseThrow(() -> new ResourceNotFoundException("Department With ID [ %s ] not found".formatted(departmentId)));
   }
 
-  public ResponseEntity<ApiResponse<DepartmentResponse>> addCreateDepartment(AddDepartmentRequest request) {
+  public ResponseEntity<ApiResponse<DepartmentResponse>> createDepartment(AddDepartmentRequest request) {
     Department department = Department.builder()
         .name(request.name())
         .build();
@@ -71,9 +72,9 @@ public class DepartmentService {
     );
   }
 
-  public ResponseEntity<ApiResponse<DepartmentResponse>> updateDepartmentName(UUID departmentId, AddDepartmentRequest request) {
+  public ResponseEntity<ApiResponse<DepartmentResponse>> updateDepartmentName(UUID departmentId, UpdateDepartmentRequest request) {
     Department department = getDepartmentByID(departmentId);
-    department.setName(request.name());
+    department.setName(request.newName());
     departmentRepository.save(department);
     DepartmentResponse departmentResponse = INSTANCE.departmentTODepartmentResponse(department);
     return ResponseEntity.ok(
