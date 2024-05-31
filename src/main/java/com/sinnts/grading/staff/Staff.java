@@ -3,10 +3,7 @@ package com.sinnts.grading.staff;
 import com.sinnts.grading.department.Department;
 import com.sinnts.grading.grading.Grading;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -20,6 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "sinnts_staff")
 @EntityListeners(AuditingEntityListener.class)

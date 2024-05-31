@@ -19,9 +19,8 @@ spring:
     show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
     database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   flyway:
     baselineOnMigrate: true

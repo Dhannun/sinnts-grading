@@ -12,7 +12,14 @@ import java.util.UUID;
 /**
  * DTO for {@link Staff}
  */
-public record StaffDto(UUID id, String fullName, String title, String identity, LocalDateTime createdDate,
-                       LocalDateTime lastModifiedDate, DepartmentResponse department,
-                       List<GradingDto> gradings) implements Serializable {
+public record StaffResponse(
+    UUID id,
+    String fullName,
+    String title,
+    String identity,
+    LocalDateTime createdDate,
+    LocalDateTime lastModifiedDate,
+    DepartmentResponse department,
+    List<GradingDto> gradings
+) implements Serializable {
 }

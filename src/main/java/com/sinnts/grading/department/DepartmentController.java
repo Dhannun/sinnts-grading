@@ -3,8 +3,8 @@ package com.sinnts.grading.department;
 import com.sinnts.grading.department.dto.request.AddDepartmentRequest;
 import com.sinnts.grading.department.dto.request.UpdateDepartmentRequest;
 import com.sinnts.grading.department.dto.response.DepartmentResponse;
-import com.sinnts.grading.iniversal.ApiResponse;
-import com.sinnts.grading.iniversal.PagedApiResponse;
+import com.sinnts.grading.universal.ApiResponse;
+import com.sinnts.grading.universal.PagedApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/department")
+@RequestMapping("/departments")
 @RequiredArgsConstructor
 @Tag(name = "Department Controller")
 public class DepartmentController {
@@ -22,10 +22,10 @@ public class DepartmentController {
   private final DepartmentService departmentService;
 
   @PostMapping
-  public ResponseEntity<ApiResponse<DepartmentResponse>> createDepartment(
+  public ResponseEntity<ApiResponse<DepartmentResponse>> addDepartment(
       @Valid @RequestBody AddDepartmentRequest request
   ) {
-    return departmentService.createDepartment(request);
+    return departmentService.addDepartment(request);
   }
 
   @GetMapping("/all")
@@ -36,7 +36,7 @@ public class DepartmentController {
     return departmentService.getAllDepartments(page, size);
   }
 
-  @GetMapping()
+  @GetMapping
   public ResponseEntity<ApiResponse<DepartmentResponse>> getDepartmentById(
       @RequestParam UUID departmentId
   ) {
@@ -57,6 +57,5 @@ public class DepartmentController {
   ) {
     return departmentService.deleteDepartment(departmentId);
   }
-
 
 }

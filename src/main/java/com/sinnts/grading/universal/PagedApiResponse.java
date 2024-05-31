@@ -1,4 +1,4 @@
-package com.sinnts.grading.iniversal;
+package com.sinnts.grading.universal;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

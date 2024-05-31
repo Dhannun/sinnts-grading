@@ -2,6 +2,7 @@ package com.sinnts.grading.staff.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +22,6 @@ public class AddStaffRequest {
   @NotEmpty(message = "Staff ID is Required")
   @NotBlank(message = "Staff ID is Required")
   private String identity;
-  @NotEmpty(message = "Department Id is Required")
-  @NotBlank(message = "Department Id is Required")
+  @NotNull(message = "Department Id is Required")
   private UUID departmentId;
 }

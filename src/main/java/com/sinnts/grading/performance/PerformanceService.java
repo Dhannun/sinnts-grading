@@ -2,11 +2,10 @@ package com.sinnts.grading.performance;
 
 import com.sinnts.grading.department.Department;
 import com.sinnts.grading.department.DepartmentRepository;
-import com.sinnts.grading.department.DepartmentService;
 import com.sinnts.grading.exceptions.InvalidResourceException;
 import com.sinnts.grading.exceptions.ResourceNotFoundException;
-import com.sinnts.grading.iniversal.ApiResponse;
-import com.sinnts.grading.iniversal.PagedApiResponse;
+import com.sinnts.grading.universal.ApiResponse;
+import com.sinnts.grading.universal.PagedApiResponse;
 import com.sinnts.grading.performance.dto.request.AddPerformanceRequest;
 import com.sinnts.grading.performance.dto.request.UpdatePerformanceRequest;
 import com.sinnts.grading.performance.dto.response.PerformanceResponse;
@@ -27,8 +26,8 @@ import static com.sinnts.grading.mpastruct.MapstructMapper.INSTANCE;
 @Service
 @RequiredArgsConstructor
 public class PerformanceService {
+
   private final PerformanceRepository performanceRepository;
-  private final DepartmentService departmentService;
   private final DepartmentRepository departmentRepository;
 
   public Performance getPerformanceById(UUID performanceId) {
@@ -43,7 +42,9 @@ public class PerformanceService {
     // Check if department ID(s) is provided or not
     if (!request.departmentIds().isEmpty()) {
       for (UUID departmentId : request.departmentIds()) {
-        departments.add(departmentService.getDepartmentByID(departmentId));
+        Department department = departmentRepository.findById(departmentId)
+            .orElseThrow(() -> new ResourceNotFoundException("Department with ID [ %s ] not found".formatted(departmentId)));
+        departments.add(department);
       }
     }
 

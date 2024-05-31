@@ -4,8 +4,8 @@ import com.sinnts.grading.department.dto.request.AddDepartmentRequest;
 import com.sinnts.grading.department.dto.request.UpdateDepartmentRequest;
 import com.sinnts.grading.department.dto.response.DepartmentResponse;
 import com.sinnts.grading.exceptions.ResourceNotFoundException;
-import com.sinnts.grading.iniversal.ApiResponse;
-import com.sinnts.grading.iniversal.PagedApiResponse;
+import com.sinnts.grading.universal.ApiResponse;
+import com.sinnts.grading.universal.PagedApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +30,7 @@ public class DepartmentService {
         .orElseThrow(() -> new ResourceNotFoundException("Department With ID [ %s ] not found".formatted(departmentId)));
   }
 
-  public ResponseEntity<ApiResponse<DepartmentResponse>> createDepartment(AddDepartmentRequest request) {
+  public ResponseEntity<ApiResponse<DepartmentResponse>> addDepartment(AddDepartmentRequest request) {
     Department department = Department.builder()
         .name(request.name())
         .build();
@@ -61,7 +61,7 @@ public class DepartmentService {
         PagedApiResponse.<DepartmentResponse>builder()
             .statusCode(HttpStatus.OK.value())
             .status("Success")
-            .message("Department Created successfully")
+            .message("All Departments Fetched successfully")
             .data(
                 departmentResponseList
             )

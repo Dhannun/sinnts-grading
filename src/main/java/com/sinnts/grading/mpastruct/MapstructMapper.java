@@ -4,6 +4,8 @@ import com.sinnts.grading.department.Department;
 import com.sinnts.grading.department.dto.response.DepartmentResponse;
 import com.sinnts.grading.performance.Performance;
 import com.sinnts.grading.performance.dto.response.PerformanceResponse;
+import com.sinnts.grading.staff.Staff;
+import com.sinnts.grading.staff.dto.response.StaffResponse;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -21,4 +23,6 @@ public interface MapstructMapper {
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   Performance partialUpdate(PerformanceResponse performanceResponse, @MappingTarget Performance performance);
+
+  StaffResponse staffToStaffDto(Staff staff);
 }

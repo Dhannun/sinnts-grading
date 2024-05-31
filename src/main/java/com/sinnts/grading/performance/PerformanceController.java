@@ -1,7 +1,7 @@
 package com.sinnts.grading.performance;
 
-import com.sinnts.grading.iniversal.ApiResponse;
-import com.sinnts.grading.iniversal.PagedApiResponse;
+import com.sinnts.grading.universal.ApiResponse;
+import com.sinnts.grading.universal.PagedApiResponse;
 import com.sinnts.grading.performance.dto.request.AddPerformanceRequest;
 import com.sinnts.grading.performance.dto.request.UpdatePerformanceRequest;
 import com.sinnts.grading.performance.dto.response.PerformanceResponse;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/performance")
+@RequestMapping("/performances")
 @RequiredArgsConstructor
 @Tag(name = "Performance Controller")
 public class PerformanceController {
