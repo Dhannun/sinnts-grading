@@ -9,6 +9,7 @@ import com.sinnts.grading.universal.PagedApiResponse;
 import com.sinnts.grading.staff.dto.request.AddStaffRequest;
 import com.sinnts.grading.staff.dto.request.UpdateStaffRequest;
 import com.sinnts.grading.staff.dto.response.StaffResponse;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -76,21 +77,7 @@ public class StaffService {
 
     if (staffsPage.getContent().isEmpty()) throw new ResourceNotFoundException("No staff record found");
 
-    List<StaffResponse> staffResponses = staffsPage.getContent().stream().map(INSTANCE::staffToStaffDto).toList();
-
-    return ResponseEntity.ok(
-        PagedApiResponse.<StaffResponse>builder()
-            .statusCode(HttpStatus.OK.value())
-            .status("Success")
-            .message("All Staffs Fetched successfully")
-            .data(
-                staffResponses
-            )
-            .pageNumber(page + 1)
-            .totalPages(staffsPage.getTotalPages())
-            .isLastPage(staffsPage.isLast())
-            .build()
-    );
+    return getPagedStaffsResponse(page, staffsPage);
   }
 
   public ResponseEntity<ApiResponse<StaffResponse>> getOneStaffById(UUID staffId) {
@@ -183,6 +170,40 @@ public class StaffService {
             .data(
                 staffResponse
             )
+            .build()
+    );
+  }
+
+  public ResponseEntity<PagedApiResponse<StaffResponse>> getDepartmentStaffs(UUID departmentId, int page, int size) {
+    page = page == 0 ? 0 : page - 1;
+    Department department = departmentRepository.findById(departmentId)
+        .orElseThrow(() -> new ResourceNotFoundException("Department with ID [ %s ] not found".formatted(departmentId)));
+
+    Pageable pageable = PageRequest.of(page, size);
+
+    Page<Staff> staffsByDepartmentPage = staffRepository.getStaffsByDepartment(department, pageable);
+
+    if (staffsByDepartmentPage.getContent().isEmpty())
+      throw new ResourceNotFoundException("Departments Record not Found");
+
+    return getPagedStaffsResponse(page, staffsByDepartmentPage);
+  }
+
+  @NotNull
+  private ResponseEntity<PagedApiResponse<StaffResponse>> getPagedStaffsResponse(int page, Page<Staff> staffsByDepartmentPage) {
+    List<StaffResponse> staffResponses = staffsByDepartmentPage.getContent().stream().map(INSTANCE::staffToStaffDto).toList();
+
+    return ResponseEntity.ok(
+        PagedApiResponse.<StaffResponse>builder()
+            .statusCode(HttpStatus.OK.value())
+            .status("Success")
+            .message("All Staffs Fetched successfully")
+            .data(
+                staffResponses
+            )
+            .pageNumber(page + 1)
+            .totalPages(staffsByDepartmentPage.getTotalPages())
+            .isLastPage(staffsByDepartmentPage.isLast())
             .build()
     );
   }

@@ -66,5 +66,13 @@ public class StaffController {
     return staffService.changeStaffDepartment(staffId, newDepartmentId);
   }
 
+  @GetMapping("/for-department/{departmentId}")
+  public ResponseEntity<PagedApiResponse<StaffResponse>> getDepartmentStaffs(
+      @PathVariable UUID departmentId,
+      @RequestParam(required = false, defaultValue = "1") int page,
+      @RequestParam(required = false, defaultValue = "10") int size
+  ) {
+    return staffService.getDepartmentStaffs(departmentId, page, size);
+  }
 
 }
