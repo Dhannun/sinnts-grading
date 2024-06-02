@@ -7,6 +7,7 @@ import com.sinnts.grading.exceptions.ResourceNotFoundException;
 import com.sinnts.grading.universal.ApiResponse;
 import com.sinnts.grading.universal.PagedApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 import static com.sinnts.grading.mpastruct.MapstructMapper.INSTANCE;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DepartmentService {
@@ -26,6 +28,7 @@ public class DepartmentService {
   private final DepartmentRepository departmentRepository;
 
   public Department getDepartmentByID(UUID departmentId) {
+    log.info("Getting department by ID: {}", departmentId);
     return departmentRepository.findById(departmentId)
         .orElseThrow(() -> new ResourceNotFoundException("Department With ID [ %s ] not found".formatted(departmentId)));
   }

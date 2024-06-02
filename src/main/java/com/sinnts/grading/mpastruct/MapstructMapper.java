@@ -2,6 +2,8 @@ package com.sinnts.grading.mpastruct;
 
 import com.sinnts.grading.department.Department;
 import com.sinnts.grading.department.dto.response.DepartmentResponse;
+import com.sinnts.grading.grading.Grading;
+import com.sinnts.grading.grading.dto.response.GradingResponse;
 import com.sinnts.grading.performance.Performance;
 import com.sinnts.grading.performance.dto.response.PerformanceResponse;
 import com.sinnts.grading.staff.Staff;
@@ -25,4 +27,6 @@ public interface MapstructMapper {
   Performance partialUpdate(PerformanceResponse performanceResponse, @MappingTarget Performance performance);
 
   StaffResponse staffToStaffDto(Staff staff);
+
+  GradingResponse gradingToGradingResponse(Grading grading);
 }

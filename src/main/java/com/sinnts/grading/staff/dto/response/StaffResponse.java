@@ -1,12 +1,10 @@
 package com.sinnts.grading.staff.dto.response;
 
 import com.sinnts.grading.department.dto.response.DepartmentResponse;
-import com.sinnts.grading.grading.dto.GradingDto;
 import com.sinnts.grading.staff.Staff;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,7 +17,6 @@ public record StaffResponse(
     String identity,
     LocalDateTime createdDate,
     LocalDateTime lastModifiedDate,
-    DepartmentResponse department,
-    List<GradingDto> gradings
+    DepartmentResponse department
 ) implements Serializable {
 }

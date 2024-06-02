@@ -2,11 +2,9 @@ package com.sinnts.grading.grading;
 
 import com.sinnts.grading.grading.enums.Grade;
 import com.sinnts.grading.performance.Performance;
+import com.sinnts.grading.staff.Staff;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(name = "sinnts_staff_grading")
 @EntityListeners(AuditingEntityListener.class)
@@ -42,4 +41,9 @@ public class Grading {
   @LastModifiedDate
   @Column(name = "last_modified_date", insertable = false)
   private LocalDateTime lastModifiedDate;
+
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "staff_id")
+  private Staff staff;
+
 }

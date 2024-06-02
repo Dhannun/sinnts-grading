@@ -58,7 +58,7 @@ public class PerformanceController {
     return performanceService.deletePerformance(performanceId);
   }
 
-  @PutMapping("/add_department/{performanceId}/{departmentId}")
+  @PutMapping("/add-department/{performanceId}/{departmentId}")
   public ResponseEntity<ApiResponse<PerformanceResponse>> addDepartment(
       @PathVariable UUID performanceId,
       @PathVariable UUID departmentId
@@ -66,7 +66,7 @@ public class PerformanceController {
     return performanceService.addDepartment(performanceId, departmentId);
   }
 
-  @PutMapping("/remove_department/{performanceId}/{departmentId}")
+  @PutMapping("/remove-department/{performanceId}/{departmentId}")
   public ResponseEntity<ApiResponse<PerformanceResponse>> removeDepartment(
       @PathVariable UUID performanceId,
       @PathVariable UUID departmentId
@@ -74,7 +74,7 @@ public class PerformanceController {
     return performanceService.removeDepartment(performanceId, departmentId);
   }
 
-  @GetMapping("/performances/{departmentId}")
+  @GetMapping("/for-department/{departmentId}")
   public ResponseEntity<PagedApiResponse<PerformanceResponse>> getDepartmentPerformances(
       @PathVariable UUID departmentId,
       @RequestParam(required = false, defaultValue = "1") int page,

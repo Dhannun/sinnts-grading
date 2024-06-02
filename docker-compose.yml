@@ -5,7 +5,7 @@ services:
     ports:
       - 2524:5432
     environment:
-      POSTGRES_USER: username
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       PGDATA: /var/lib/postgresql/data
       POSTGRES_DB: sinnts-grading

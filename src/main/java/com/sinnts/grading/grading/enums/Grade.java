@@ -7,11 +7,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Grade {
 
-  NEED_IMPROVEMENT(0, 1),
-  BELOW_EXPECTATION(40, 2),
-  MEETS_EXPECTATION(65, 3),
-  EXCEEDS_EXPECTATION(95, 4);
+  NEED_IMPROVEMENT("Need Improvement", 0, 1),
+  BELOW_EXPECTATION("Below Expectation",40, 2),
+  MEETS_EXPECTATION("Meets Expectation",65, 3),
+  EXCEEDS_EXPECTATION("Exceeds Expectation",95, 4);
 
+  private final String name;
   private final int score;
   private final int point;
 }

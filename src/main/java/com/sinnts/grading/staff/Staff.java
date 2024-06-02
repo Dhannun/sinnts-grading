@@ -9,9 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -48,7 +46,7 @@ public class Staff {
   @JoinColumn(name = "department_id", nullable = false)
   private Department department;
 
-  @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
-  @JoinColumn(name = "staff_id")
-  private List<Grading> gradings = new ArrayList<>();
+  @OneToMany(mappedBy = "staff", orphanRemoval = true)
+  private Set<Grading> gradings = new LinkedHashSet<>();
+
 }
