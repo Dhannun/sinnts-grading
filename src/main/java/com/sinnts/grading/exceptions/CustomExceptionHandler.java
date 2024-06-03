@@ -1,6 +1,7 @@
 package com.sinnts.grading.exceptions;
 
 import com.sinnts.grading.exceptions.dto.ExceptionResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.security.SignatureException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +30,32 @@ public class CustomExceptionHandler {
                 .errorCode(ACCOUNT_LOCKED.getCode())
                 .errorDescription(ACCOUNT_LOCKED.getDescription())
                 .error(exception.getMessage())
+                .build()
+        );
+  }
+
+  @ExceptionHandler(SignatureException.class)
+  public final ResponseEntity<ExceptionResponse> handleSignatureException(SignatureException exception) {
+    return ResponseEntity
+        .status(FORBIDDEN)
+        .body(
+            ExceptionResponse.builder()
+                .errorCode(FORBIDDEN.value())
+                .errorDescription(exception.getMessage())
+                .error("Token Signature Exception")
+                .build()
+        );
+  }
+
+  @ExceptionHandler(ExpiredJwtException.class)
+  public final ResponseEntity<ExceptionResponse> handleExpiredJwtException(ExpiredJwtException exception) {
+    return ResponseEntity
+        .status(FORBIDDEN)
+        .body(
+            ExceptionResponse.builder()
+                .errorCode(FORBIDDEN.value())
+                .errorDescription(exception.getMessage())
+                .error("Token Expired Exception")
                 .build()
         );
   }
@@ -116,7 +144,7 @@ public class CustomExceptionHandler {
                 .build()
         );
   }
-/*
+
   @ExceptionHandler(Exception.class)
   public final ResponseEntity<ExceptionResponse> handleException(Exception exception) {
 
@@ -126,9 +154,9 @@ public class CustomExceptionHandler {
         .status(INTERNAL_SERVER_ERROR)
         .body(
             ExceptionResponse.builder()
-                .errorDescription("Internal Server Error, please contact the administrator")
-                .error(exception.getMessage())
+                .errorDescription(exception.getMessage())
+                .error("Internal Server Error, please contact the administrator")
                 .build()
         );
-  }*/
+  }
 }

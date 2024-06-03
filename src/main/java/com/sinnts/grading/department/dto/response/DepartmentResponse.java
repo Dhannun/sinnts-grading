@@ -16,6 +16,8 @@ public record DepartmentResponse(
     UUID id,
     String name,
     LocalDateTime createdDate,
-    LocalDateTime lastModifiedDate
+    LocalDateTime lastModifiedDate,
+    UUID createdBy,
+    UUID lastModifiedBy
 ) {
 }

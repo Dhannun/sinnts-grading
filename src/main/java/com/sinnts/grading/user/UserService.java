@@ -4,9 +4,11 @@ package com.sinnts.grading.user;
 import com.sinnts.grading.exceptions.InvalidResourceException;
 import com.sinnts.grading.exceptions.ResourceNotFoundException;
 import com.sinnts.grading.config.security.JwtService;
+import com.sinnts.grading.mpastruct.MapstructMapper;
 import com.sinnts.grading.universal.ApiResponse;
 import com.sinnts.grading.user.dto.request.LoginRequest;
 import com.sinnts.grading.user.dto.response.LoginResponse;
+import com.sinnts.grading.user.dto.response.UserResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
+import static com.sinnts.grading.mpastruct.MapstructMapper.INSTANCE;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service
@@ -32,6 +37,11 @@ public class UserService {
         .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
   }
 
+  public UserResponse getUserResponseByUserId(UUID userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+    return INSTANCE.userToUserResponse(user);
+  }
 
   public ResponseEntity<ApiResponse<LoginResponse>> login(LoginRequest request) {
 

@@ -40,8 +40,7 @@ public class SecurityConfig {
       "/configuration/security",
       "/swagger-ui/**",
       "/webjars/**",
-      "/swagger-ui.html",
-      "/**"
+      "/swagger-ui.html"
   };
 
   @Bean
@@ -55,25 +54,25 @@ public class SecurityConfig {
                     WHITE_LIST
                 ).permitAll()
 
-                .requestMatchers("/departments").hasRole(ADMIN.name())
+                .requestMatchers("/departments/**").hasRole(ADMIN.name())
                 .requestMatchers(GET, "/departments/**").hasAnyAuthority(ADMIN_READ.name())
                 .requestMatchers(POST, "/departments/**").hasAnyAuthority(ADMIN_CREATE.name())
                 .requestMatchers(PUT, "/departments/**").hasAnyAuthority(ADMIN_UPDATE.name())
                 .requestMatchers(DELETE, "/departments/**").hasAnyAuthority(ADMIN_DELETE.name())
 
-                .requestMatchers("/staffs").hasRole(ADMIN.name())
+                .requestMatchers("/staffs/**").hasRole(ADMIN.name())
                 .requestMatchers(GET, "/staffs/**").hasAnyAuthority(ADMIN_READ.name())
                 .requestMatchers(POST, "/staffs/**").hasAnyAuthority(ADMIN_CREATE.name())
                 .requestMatchers(PUT, "/staffs/**").hasAnyAuthority(ADMIN_UPDATE.name())
                 .requestMatchers(DELETE, "/staffs/**").hasAnyAuthority(ADMIN_DELETE.name())
 
-                .requestMatchers("/performances").hasRole(ADMIN.name())
+                .requestMatchers("/performances/**").hasRole(ADMIN.name())
                 .requestMatchers(GET, "/performances/**").hasAnyAuthority(ADMIN_READ.name())
                 .requestMatchers(POST, "/performances/**").hasAnyAuthority(ADMIN_CREATE.name())
                 .requestMatchers(PUT, "/performances/**").hasAnyAuthority(ADMIN_UPDATE.name())
                 .requestMatchers(DELETE, "/performances/**").hasAnyAuthority(ADMIN_DELETE.name())
 
-                .requestMatchers("/gradings").hasRole(ADMIN.name())
+                .requestMatchers("/gradings/**").hasRole(ADMIN.name())
                 .requestMatchers(GET, "/gradings/**").hasAnyAuthority(ADMIN_READ.name())
                 .requestMatchers(POST, "/gradings/**").hasAnyAuthority(ADMIN_CREATE.name())
                 .requestMatchers(PUT, "/gradings/**").hasAnyAuthority(ADMIN_UPDATE.name())
