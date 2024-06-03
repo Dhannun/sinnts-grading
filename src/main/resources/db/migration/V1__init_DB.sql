@@ -11,11 +11,11 @@ CREATE TABLE sinnts_access_tokens
 
 CREATE TABLE sinnts_department
 (
-    id                 UUID                        NOT NULL,
+    id                 UUID NOT NULL,
     name               VARCHAR(255),
     created_date       TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     last_modified_date TIMESTAMP WITHOUT TIME ZONE,
-    created_by         UUID                        NOT NULL,
+    created_by         UUID NOT NULL,
     last_modified_by   UUID,
     CONSTRAINT pk_sinnts_department PRIMARY KEY (id)
 );
@@ -29,26 +29,26 @@ CREATE TABLE sinnts_department_performances
 
 CREATE TABLE sinnts_staff
 (
-    id                 UUID                        NOT NULL,
+    id                 UUID NOT NULL,
     full_name          VARCHAR(255),
     title              VARCHAR(255),
     identity           VARCHAR(255),
     created_date       TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     last_modified_date TIMESTAMP WITHOUT TIME ZONE,
-    created_by         UUID                        NOT NULL,
+    created_by         UUID NOT NULL,
     last_modified_by   UUID,
-    department_id      UUID                        NOT NULL,
+    department_id      UUID NOT NULL,
     CONSTRAINT pk_sinnts_staff PRIMARY KEY (id)
 );
 
 CREATE TABLE sinnts_staff_grading
 (
-    id                 UUID                        NOT NULL,
+    id                 UUID NOT NULL,
     grade              VARCHAR(255),
     performance_id     UUID,
     created_date       TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     last_modified_date TIMESTAMP WITHOUT TIME ZONE,
-    created_by         UUID                        NOT NULL,
+    created_by         UUID NOT NULL,
     last_modified_by   UUID,
     staff_id           UUID,
     CONSTRAINT pk_sinnts_staff_grading PRIMARY KEY (id)
@@ -56,24 +56,24 @@ CREATE TABLE sinnts_staff_grading
 
 CREATE TABLE sinnts_staff_performance
 (
-    id                 UUID                        NOT NULL,
+    id                 UUID NOT NULL,
     name               VARCHAR(255),
     created_date       TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     last_modified_date TIMESTAMP WITHOUT TIME ZONE,
-    created_by         UUID                        NOT NULL,
+    created_by         UUID NOT NULL,
     last_modified_by   UUID,
     CONSTRAINT pk_sinnts_staff_performance PRIMARY KEY (id)
 );
 
 CREATE TABLE sinnts_users
 (
-    id                 UUID                        NOT NULL,
+    id                 UUID         NOT NULL,
     full_name          VARCHAR(255),
-    username           VARCHAR(255)                NOT NULL,
+    username           VARCHAR(255) NOT NULL,
     password           VARCHAR(255),
     role               VARCHAR(255),
-    enabled            BOOLEAN                     NOT NULL,
-    locked             BOOLEAN                     NOT NULL,
+    enabled            BOOLEAN      NOT NULL,
+    locked             BOOLEAN      NOT NULL,
     created_date       TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     last_modified_date TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT pk_sinnts_users PRIMARY KEY (id)
