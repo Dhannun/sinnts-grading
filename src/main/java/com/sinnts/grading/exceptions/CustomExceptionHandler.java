@@ -1,6 +1,10 @@
 package com.sinnts.grading.exceptions;
 
+import com.sinnts.grading.exceptions.dto.ExceptionResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -8,14 +12,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.sinnts.grading.exceptions.ErrorCodes.ACCOUNT_LOCKED;
-import static com.sinnts.grading.exceptions.ErrorCodes.BAD_CREDENTIALS;
+import static com.sinnts.grading.exceptions.enums.ErrorCodes.*;
 import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
 
-/*
+
   @ExceptionHandler(LockedException.class)
   public final ResponseEntity<ExceptionResponse> handleLockedException(LockedException exception) {
     return ResponseEntity
@@ -56,18 +59,6 @@ public class CustomExceptionHandler {
         );
   }
 
-  @ExceptionHandler(MessagingException.class)
-  public final ResponseEntity<ExceptionResponse> handleMessagingException(MessagingException exception) {
-    return ResponseEntity
-        .status(INTERNAL_SERVER_ERROR)
-        .body(
-            ExceptionResponse.builder()
-                .error(exception.getMessage())
-                .build()
-        );
-  }
-*/
-
   @ExceptionHandler(ResourceNotFoundException.class)
   public final ResponseEntity<ExceptionResponse> handleResourceNotFoundException(ResourceNotFoundException exception) {
     return ResponseEntity
@@ -94,6 +85,19 @@ public class CustomExceptionHandler {
         );
   }
 
+  @ExceptionHandler(UserExistsByUsername.class)
+  public final ResponseEntity<ExceptionResponse> handleUserExistsByUsername(UserExistsByUsername exception) {
+    return ResponseEntity
+        .status(CONFLICT)
+        .body(
+            ExceptionResponse.builder()
+                .errorCode(USER_EXISTS_BY_USERNAME.getCode())
+                .errorDescription(exception.getMessage())
+                .error(USER_EXISTS_BY_USERNAME.getDescription())
+                .build()
+        );
+  }
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public final ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
     Set<String> errors = new HashSet<>();
@@ -112,7 +116,7 @@ public class CustomExceptionHandler {
                 .build()
         );
   }
-
+/*
   @ExceptionHandler(Exception.class)
   public final ResponseEntity<ExceptionResponse> handleException(Exception exception) {
 
@@ -126,5 +130,5 @@ public class CustomExceptionHandler {
                 .error(exception.getMessage())
                 .build()
         );
-  }
+  }*/
 }

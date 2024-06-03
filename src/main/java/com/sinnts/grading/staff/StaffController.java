@@ -5,6 +5,7 @@ import com.sinnts.grading.universal.PagedApiResponse;
 import com.sinnts.grading.staff.dto.request.AddStaffRequest;
 import com.sinnts.grading.staff.dto.request.UpdateStaffRequest;
 import com.sinnts.grading.staff.dto.response.StaffResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RequestMapping("/staffs")
 @RequiredArgsConstructor
 @Tag(name = "Staff Controller")
+@SecurityRequirement(name = "BearerAuth")
 public class StaffController {
 
   private final StaffService staffService;

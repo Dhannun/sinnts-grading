@@ -8,6 +8,8 @@ import com.sinnts.grading.performance.Performance;
 import com.sinnts.grading.performance.dto.response.PerformanceResponse;
 import com.sinnts.grading.staff.Staff;
 import com.sinnts.grading.staff.dto.response.StaffResponse;
+import com.sinnts.grading.user.User;
+import com.sinnts.grading.user.dto.response.UserResponse;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -29,4 +31,6 @@ public interface MapstructMapper {
   StaffResponse staffToStaffDto(Staff staff);
 
   GradingResponse gradingToGradingResponse(Grading grading);
+
+  UserResponse userToUserResponse(User user);
 }

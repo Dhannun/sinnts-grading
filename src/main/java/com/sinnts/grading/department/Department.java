@@ -4,6 +4,7 @@ import com.sinnts.grading.performance.Performance;
 import com.sinnts.grading.staff.Staff;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -37,6 +38,14 @@ public class Department {
   @LastModifiedDate
   @Column(name = "last_modified_date", insertable = false)
   private LocalDateTime lastModifiedDate;
+
+  @CreatedBy
+  @Column(name = "created_by", nullable = false, updatable = false)
+  private UUID createdBy;
+
+  @LastModifiedDate
+  @Column(name = "last_modified_by", insertable = false)
+  private UUID lastModifiedBy;
 
   @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Staff> staffs = new LinkedHashSet<>();

@@ -5,6 +5,7 @@ import com.sinnts.grading.department.dto.request.UpdateDepartmentRequest;
 import com.sinnts.grading.department.dto.response.DepartmentResponse;
 import com.sinnts.grading.universal.ApiResponse;
 import com.sinnts.grading.universal.PagedApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RequestMapping("/departments")
 @RequiredArgsConstructor
 @Tag(name = "Department Controller")
+@SecurityRequirement(name = "BearerAuth")
 public class DepartmentController {
 
   private final DepartmentService departmentService;

@@ -1,4 +1,4 @@
-package com.sinnts.grading.exceptions;
+package com.sinnts.grading.exceptions.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

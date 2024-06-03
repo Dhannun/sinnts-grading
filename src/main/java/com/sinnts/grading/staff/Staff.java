@@ -4,6 +4,7 @@ import com.sinnts.grading.department.Department;
 import com.sinnts.grading.grading.Grading;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -41,6 +42,14 @@ public class Staff {
   @LastModifiedDate
   @Column(name = "last_modified_date", insertable = false)
   private LocalDateTime lastModifiedDate;
+
+  @CreatedBy
+  @Column(name = "created_by", nullable = false, updatable = false)
+  private UUID createdBy;
+
+  @LastModifiedDate
+  @Column(name = "last_modified_by", insertable = false)
+  private UUID lastModifiedBy;
 
   @ManyToOne
   @JoinColumn(name = "department_id", nullable = false)

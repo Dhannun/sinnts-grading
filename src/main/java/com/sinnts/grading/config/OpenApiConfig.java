@@ -2,8 +2,12 @@ package com.sinnts.grading.config;
 
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+
+import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.HTTP;
 
 @OpenAPIDefinition(
     info = @Info(
@@ -17,7 +21,6 @@ import io.swagger.v3.oas.annotations.info.Info;
         version = "1.0.0"
     )
 )
-/*
 @SecurityScheme(
     name = "BearerAuth",
     description = "JWT Auth Required",
@@ -26,7 +29,5 @@ import io.swagger.v3.oas.annotations.info.Info;
     bearerFormat = "JWT",
     in = SecuritySchemeIn.HEADER
 )
-*/
-
 public class OpenApiConfig {
 }

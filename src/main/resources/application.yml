@@ -29,3 +29,11 @@ spring:
     password: ${DB_PASSWORD}
     baselineDescription: "init"
     baselineVersion: 0
+
+application:
+  security:
+    jwt:
+      secretKey: ${JWT_SECRET_KEY}
+      expiration: ${JWT_EXPIRY}
+      refresh-token:
+        expiration: ${REFRESH_TOKEN_EXPIRY}

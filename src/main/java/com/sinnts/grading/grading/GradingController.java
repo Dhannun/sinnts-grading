@@ -5,6 +5,7 @@ import com.sinnts.grading.grading.dto.request.UpdateGradingRequest;
 import com.sinnts.grading.grading.dto.response.GradingResponse;
 import com.sinnts.grading.universal.ApiResponse;
 import com.sinnts.grading.universal.PagedApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RequestMapping("/gradings")
 @RequiredArgsConstructor
 @Tag(name = "Grading Controller")
+@SecurityRequirement(name = "BearerAuth")
 public class GradingController {
 
   private final GradingService gradingService;

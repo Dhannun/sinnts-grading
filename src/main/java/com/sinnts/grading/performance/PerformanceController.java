@@ -5,6 +5,7 @@ import com.sinnts.grading.universal.PagedApiResponse;
 import com.sinnts.grading.performance.dto.request.AddPerformanceRequest;
 import com.sinnts.grading.performance.dto.request.UpdatePerformanceRequest;
 import com.sinnts.grading.performance.dto.response.PerformanceResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RequestMapping("/performances")
 @RequiredArgsConstructor
 @Tag(name = "Performance Controller")
+@SecurityRequirement(name = "BearerAuth")
 public class PerformanceController {
 
   private final PerformanceService performanceService;
