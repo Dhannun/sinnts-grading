@@ -14,11 +14,32 @@ import static com.sinnts.grading.user.enums.Permission.*;
 @Getter
 public enum Role {
 
-  ADMIN(
+  SUPER_ADMIN(
       Set.of(
+          SUPER_ADMIN_CREATE,
+          SUPER_ADMIN_READ,
+          SUPER_ADMIN_UPDATE,
+          SUPER_ADMIN_DELETE,
+
+          ADMIN_CREATE,
           ADMIN_READ,
           ADMIN_UPDATE,
           ADMIN_DELETE,
+
+          USER_CREATE,
+          USER_READ,
+          USER_UPDATE,
+          USER_DELETE
+      )
+  ),
+  ADMIN(
+      Set.of(
+          ADMIN_CREATE,
+          ADMIN_READ,
+          ADMIN_UPDATE,
+          ADMIN_DELETE,
+
+          USER_CREATE,
           USER_READ,
           USER_UPDATE,
           USER_DELETE
@@ -26,6 +47,7 @@ public enum Role {
   ),
   USER(
       Set.of(
+          USER_CREATE,
           USER_READ,
           USER_UPDATE,
           USER_DELETE

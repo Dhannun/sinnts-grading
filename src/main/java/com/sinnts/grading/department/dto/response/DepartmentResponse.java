@@ -1,5 +1,6 @@
 package com.sinnts.grading.department.dto.response;
 
+import com.sinnts.grading.user.dto.response.UserDetails;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +18,7 @@ public record DepartmentResponse(
     String name,
     LocalDateTime createdDate,
     LocalDateTime lastModifiedDate,
-    UUID createdBy,
-    UUID lastModifiedBy
+    UserDetails createdBy,
+    UserDetails lastModifiedBy
 ) {
 }

@@ -1,6 +1,7 @@
 package com.sinnts.grading.config;
 
-import com.sinnts.grading.auditing.ApplicationAuditAware;
+import com.sinnts.grading.config.auditing.ApplicationAuditAware;
+import com.sinnts.grading.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,8 +41,9 @@ public class ApplicationConfig {
   }
 
   @Bean
-  public AuditorAware<UUID> auditorAware() {
+  public AuditorAware<User> auditorAware() {
     return new ApplicationAuditAware();
   }
+
 
 }

@@ -1,4 +1,4 @@
-package com.sinnts.grading.auditing;
+package com.sinnts.grading.config.auditing;
 
 import com.sinnts.grading.user.User;
 import org.springframework.data.domain.AuditorAware;
@@ -9,10 +9,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ApplicationAuditAware implements AuditorAware<UUID> {
+public class ApplicationAuditAware implements AuditorAware<User> {
 
   @Override
-  public Optional<UUID> getCurrentAuditor() {
+  public Optional<User> getCurrentAuditor() {
     Authentication authentication =
         SecurityContextHolder
             .getContext()
@@ -28,6 +28,6 @@ public class ApplicationAuditAware implements AuditorAware<UUID> {
 
     User userPrincipal = (User) authentication.getPrincipal();
 
-    return Optional.ofNullable(userPrincipal.getId());
+    return Optional.ofNullable(userPrincipal);
   }
 }
