@@ -37,6 +37,7 @@ public class SecurityConfig {
    * And the remaining are for OpenAPI (Swagger) Documentations
    */
   private static final String[] WHITE_LIST = {
+      "/ping",
       "/auth/**",
       "/v2/api-docs",
       "/v3/api-docs",

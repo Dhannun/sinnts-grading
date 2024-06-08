@@ -24,12 +24,7 @@ public enum Role {
           ADMIN_CREATE,
           ADMIN_READ,
           ADMIN_UPDATE,
-          ADMIN_DELETE,
-
-          USER_CREATE,
-          USER_READ,
-          USER_UPDATE,
-          USER_DELETE
+          ADMIN_DELETE
       )
   ),
   ADMIN(
@@ -37,20 +32,7 @@ public enum Role {
           ADMIN_CREATE,
           ADMIN_READ,
           ADMIN_UPDATE,
-          ADMIN_DELETE,
-
-          USER_CREATE,
-          USER_READ,
-          USER_UPDATE,
-          USER_DELETE
-      )
-  ),
-  USER(
-      Set.of(
-          USER_CREATE,
-          USER_READ,
-          USER_UPDATE,
-          USER_DELETE
+          ADMIN_DELETE
       )
   );
 
