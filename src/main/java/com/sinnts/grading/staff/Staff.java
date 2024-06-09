@@ -60,6 +60,7 @@ public class Staff {
   private Department department;
 
   @OneToMany(mappedBy = "staff", orphanRemoval = true)
+  @Builder.Default
   private Set<Grading> gradings = new LinkedHashSet<>();
 
 }

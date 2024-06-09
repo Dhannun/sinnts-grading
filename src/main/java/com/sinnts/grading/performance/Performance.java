@@ -51,6 +51,7 @@ public class Performance {
   private User lastModifiedBy;
 
   @ManyToMany(mappedBy = "performances")
+  @Builder.Default
   private Set<Department> departments = new LinkedHashSet<>();
 
 }

@@ -60,12 +60,14 @@ public class Department {
 //  private UUID lastModifiedBy;
 
   @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
   private Set<Staff> staffs = new LinkedHashSet<>();
 
   @ManyToMany
   @JoinTable(name = "sinnts_department_performances",
       joinColumns = @JoinColumn(name = "department_id"),
       inverseJoinColumns = @JoinColumn(name = "performances_id"))
+  @Builder.Default
   private Set<Performance> performances = new LinkedHashSet<>();
 
 }
