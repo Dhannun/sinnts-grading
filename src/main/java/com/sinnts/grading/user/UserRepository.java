@@ -13,4 +13,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
   @Query("select u from User u where upper(u.username) = upper(?1)")
   Optional<User> findByUsernameIgnoreCase(String username);
 
+  @Query("select u from User u where u.role = 'SUPER_ADMIN'")
+  Optional<User> getSuperAdmin();
 }

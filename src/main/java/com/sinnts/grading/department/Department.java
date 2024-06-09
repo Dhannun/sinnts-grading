@@ -2,6 +2,7 @@ package com.sinnts.grading.department;
 
 import com.sinnts.grading.performance.Performance;
 import com.sinnts.grading.staff.Staff;
+import com.sinnts.grading.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -40,13 +41,23 @@ public class Department {
   @Column(name = "last_modified_date", insertable = false)
   private LocalDateTime lastModifiedDate;
 
+  @ManyToOne
+  @JoinColumn(name = "created_by", nullable = false, updatable = false)
   @CreatedBy
-  @Column(name = "created_by", nullable = false, updatable = false)
-  private UUID createdBy;
+  private User createdBy;
 
+  @ManyToOne
+  @JoinColumn(name = "last_modified_by", insertable = false)
   @LastModifiedBy
-  @Column(name = "last_modified_by", insertable = false)
-  private UUID lastModifiedBy;
+  private User lastModifiedBy;
+
+//  @CreatedBy
+//  @Column(name = "created_by", nullable = false, updatable = false)
+//  private UUID createdBy;
+//
+//  @LastModifiedBy
+//  @Column(name = "last_modified_by", insertable = false)
+//  private UUID lastModifiedBy;
 
   @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<Staff> staffs = new LinkedHashSet<>();

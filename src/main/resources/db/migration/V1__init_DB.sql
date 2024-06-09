@@ -85,6 +85,18 @@ ALTER TABLE sinnts_users
 ALTER TABLE sinnts_access_tokens
     ADD CONSTRAINT FK_SINNTS_ACCESS_TOKENS_ON_USER FOREIGN KEY (user_id) REFERENCES sinnts_users (id);
 
+ALTER TABLE sinnts_department
+    ADD CONSTRAINT FK_SINNTS_DEPARTMENT_ON_CREATED_BY FOREIGN KEY (created_by) REFERENCES sinnts_users (id);
+
+ALTER TABLE sinnts_department
+    ADD CONSTRAINT FK_SINNTS_DEPARTMENT_ON_LAST_MODIFIED_BY FOREIGN KEY (last_modified_by) REFERENCES sinnts_users (id);
+
+ALTER TABLE sinnts_staff_grading
+    ADD CONSTRAINT FK_SINNTS_STAFF_GRADING_ON_CREATED_BY FOREIGN KEY (created_by) REFERENCES sinnts_users (id);
+
+ALTER TABLE sinnts_staff_grading
+    ADD CONSTRAINT FK_SINNTS_STAFF_GRADING_ON_LAST_MODIFIED_BY FOREIGN KEY (last_modified_by) REFERENCES sinnts_users (id);
+
 ALTER TABLE sinnts_staff_grading
     ADD CONSTRAINT FK_SINNTS_STAFF_GRADING_ON_PERFORMANCE FOREIGN KEY (performance_id) REFERENCES sinnts_staff_performance (id);
 
@@ -92,7 +104,19 @@ ALTER TABLE sinnts_staff_grading
     ADD CONSTRAINT FK_SINNTS_STAFF_GRADING_ON_STAFF FOREIGN KEY (staff_id) REFERENCES sinnts_staff (id);
 
 ALTER TABLE sinnts_staff
+    ADD CONSTRAINT FK_SINNTS_STAFF_ON_CREATED_BY FOREIGN KEY (created_by) REFERENCES sinnts_users (id);
+
+ALTER TABLE sinnts_staff
     ADD CONSTRAINT FK_SINNTS_STAFF_ON_DEPARTMENT FOREIGN KEY (department_id) REFERENCES sinnts_department (id);
+
+ALTER TABLE sinnts_staff
+    ADD CONSTRAINT FK_SINNTS_STAFF_ON_LAST_MODIFIED_BY FOREIGN KEY (last_modified_by) REFERENCES sinnts_users (id);
+
+ALTER TABLE sinnts_staff_performance
+    ADD CONSTRAINT FK_SINNTS_STAFF_PERFORMANCE_ON_CREATED_BY FOREIGN KEY (created_by) REFERENCES sinnts_users (id);
+
+ALTER TABLE sinnts_staff_performance
+    ADD CONSTRAINT FK_SINNTS_STAFF_PERFORMANCE_ON_LAST_MODIFIED_BY FOREIGN KEY (last_modified_by) REFERENCES sinnts_users (id);
 
 ALTER TABLE sinnts_department_performances
     ADD CONSTRAINT fk_sindepper_on_department FOREIGN KEY (department_id) REFERENCES sinnts_department (id);

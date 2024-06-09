@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
@@ -50,6 +51,16 @@ public class User implements UserDetails, Principal {
 
   @Column(name = "locked", nullable = false)
   private boolean locked;
+
+  @ManyToOne
+  @JoinColumn(name = "created_by", nullable = false, updatable = false)
+  @CreatedBy
+  private User createdBy;
+
+  @ManyToOne
+  @JoinColumn(name = "last_modified_by", insertable = false)
+  @LastModifiedBy
+  private User lastModifiedBy;
 
   @CreatedDate
   @Column(name = "created_date", nullable = false, updatable = false)

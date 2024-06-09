@@ -1,27 +1,28 @@
 package com.sinnts.grading.user;
 
 
-import com.sinnts.grading.exceptions.InvalidResourceException;
 import com.sinnts.grading.exceptions.ResourceNotFoundException;
-import com.sinnts.grading.config.security.JwtService;
-import com.sinnts.grading.mpastruct.MapstructMapper;
+import com.sinnts.grading.exceptions.UserExistsByUsername;
 import com.sinnts.grading.universal.ApiResponse;
-import com.sinnts.grading.user.dto.request.LoginRequest;
-import com.sinnts.grading.user.dto.response.LoginResponse;
+import com.sinnts.grading.universal.PagedApiResponse;
+import com.sinnts.grading.user.dto.request.UpdateUserRequest;
+import com.sinnts.grading.user.dto.request.UserRegistrationRequest;
 import com.sinnts.grading.user.dto.response.UserResponse;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.sinnts.grading.mpastruct.MapstructMapper.INSTANCE;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service
 @RequiredArgsConstructor
@@ -29,94 +30,137 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class UserService {
   private final UserRepository userRepository;
 
-  private final JwtService jwtService;
-  private final AuthenticationManager authenticationManager;
+  private final PasswordEncoder passwordEncoder;
+
+  public ResponseEntity<ApiResponse<UserResponse>> crateUser(UserRegistrationRequest request) {
+    if (
+        userRepository.existsByUsernameIgnoreCase(request.username())
+    ) throw new UserExistsByUsername("User With the Username [ %s ] Already Exists"
+        .formatted(request.username()));
+
+    User user = User.builder()
+        .username(request.username())
+        .password(passwordEncoder.encode(request.password()))
+        .fullName(request.fullName())
+        .role(request.role())
+        .build();
+
+    userRepository.save(user);
+
+    UserResponse userResponse = INSTANCE.userToUserResponse(user);
+
+    return ResponseEntity.ok(
+        ApiResponse.<UserResponse>builder()
+            .statusCode(HttpStatus.OK.value())
+            .status("Success")
+            .message("User With Role [ %s ] Created Successfully".formatted(request.role()))
+            .data(
+                userResponse
+            )
+            .build()
+    );
+  }
 
   public User getUserByUsername(String username) {
     return userRepository.findByUsernameIgnoreCase(username)
         .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
   }
 
-  public UserResponse getUserResponseByUserId(UUID userId) {
-    User user = userRepository.findById(userId)
-        .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
-    return INSTANCE.userToUserResponse(user);
-  }
+  public ResponseEntity<PagedApiResponse<UserResponse>> getAllUsers(int page, int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<User> usersPage = userRepository.findAll(pageable);
 
-  public ResponseEntity<ApiResponse<LoginResponse>> login(LoginRequest request) {
+    if (usersPage.getContent().isEmpty())
+      throw new ResourceNotFoundException("No Users Records Found");
 
-    authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(
-            request.username(),
-            request.password()
-        )
-    );
-
-    var user = getUserByUsername(request.username());
-
-    var jwtToken = jwtService.generateToken(user);
-    var refreshToken = jwtService.generateRefreshToken(user);
-
-
-    var payload = new LoginResponse(
-        jwtToken,
-        jwtService.getJwtExpirationInMinutes(),
-        refreshToken,
-        jwtService.getRefreshExpirationInMinuted()
-    );
+    List<UserResponse> userResponses = usersPage.getContent().stream().map(INSTANCE::userToUserResponse).toList();
 
     return ResponseEntity.ok(
-        ApiResponse.<LoginResponse>builder()
+        PagedApiResponse.<UserResponse>builder()
             .statusCode(HttpStatus.OK.value())
             .status("Success")
-            .message("Login Successfully")
+            .message("Performances Retrieved successfully")
             .data(
-                payload
+                userResponses
+            )
+            .pageNumber(page + 1)
+            .totalPages(usersPage.getTotalPages())
+            .isLastPage(usersPage.isLast())
+            .build()
+    );
+  }
+
+  public ResponseEntity<ApiResponse<UserResponse>> getUserById(UUID userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("User with the ID [ %s ] not found".formatted(userId)));
+
+    UserResponse userResponse = INSTANCE.userToUserResponse(user);
+    return ResponseEntity.ok(
+        ApiResponse.<UserResponse>builder()
+            .statusCode(HttpStatus.OK.value())
+            .status("Success")
+            .message("User With ID [ %s ] Fetched Successfully".formatted(userId))
+            .data(
+                userResponse
             )
             .build()
     );
   }
 
-  public ResponseEntity<ApiResponse<LoginResponse>> refreshToken(
-      HttpServletRequest request
-  ) {
-    final String authHeader = request.getHeader(AUTHORIZATION);
-    final String refreshToken;
-    final String userEmail;
+  public ResponseEntity<ApiResponse<UserResponse>> updateUser(UUID userId, UpdateUserRequest request) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("User with ID [ %s ] not found".formatted(userId)));
 
-    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-      throw new InvalidResourceException("No or Invalid refresh token");
-    }
+    user.setFullName(request.newFullName());
+    userRepository.save(user);
 
-    refreshToken = authHeader.substring(7);
-    userEmail = jwtService.extractUsername(refreshToken); // todo: extract user email from refresh token
+    UserResponse userResponse = INSTANCE.userToUserResponse(user);
+    return ResponseEntity.ok(
+        ApiResponse.<UserResponse>builder()
+            .statusCode(HttpStatus.OK.value())
+            .status("Success")
+            .message("User With ID [ %s ] Updated Successfully".formatted(userId))
+            .data(
+                userResponse
+            )
+            .build()
+    );
+  }
 
-    if (userEmail != null) {
+  public ResponseEntity<ApiResponse<UserResponse>> deleteUser(UUID userId) {
+    User user = userRepository
+        .findById(userId).orElseThrow(() -> new ResourceNotFoundException("User with ID [ %s ] not found".formatted(userId)));
 
-      var user = getUserByUsername(userEmail);
+    userRepository.delete(user);
 
-      if (jwtService.isTokenValid(refreshToken, user)) {
-        var newAccessToken = jwtService.generateToken(user);
+    UserResponse userResponse = INSTANCE.userToUserResponse(user);
+    return ResponseEntity.ok(
+        ApiResponse.<UserResponse>builder()
+            .statusCode(HttpStatus.OK.value())
+            .status("Success")
+            .message("User With ID [ %s ] Deleted Successfully".formatted(userId))
+            .data(
+                userResponse
+            )
+            .build()
+    );
+  }
 
-        var payload = new LoginResponse(
-            newAccessToken,
-            jwtService.getJwtExpirationInMinutes(),
-            refreshToken,
-            jwtService.getRefreshExpirationInMinuted()
-        );
+  public ResponseEntity<ApiResponse<UserResponse>> getUserProfile(String username) {
+    User user = userRepository
+        .findByUsernameIgnoreCase(username)
+        .orElseThrow(() -> new ResourceNotFoundException("User with Username [ %s ] not found".formatted(username)));
 
-        return ResponseEntity.ok(
-            ApiResponse.<LoginResponse>builder()
-                .statusCode(HttpStatus.OK.value())
-                .status("Success")
-                .message("Token Refreshed Successfully")
-                .data(
-                    payload
-                )
-                .build()
-        );
-      }
-    }
-    throw new IllegalStateException("Invalid refresh token");
+    UserResponse userResponse = INSTANCE.userToUserResponse(user);
+    return ResponseEntity.ok(
+        ApiResponse.<UserResponse>builder()
+            .statusCode(HttpStatus.OK.value())
+            .status("Success")
+            .message("User Profile Updated Successfully")
+            .data(
+                userResponse
+            )
+            .build()
+    );
   }
 }
