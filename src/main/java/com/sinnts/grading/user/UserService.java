@@ -8,6 +8,7 @@ import com.sinnts.grading.universal.PagedApiResponse;
 import com.sinnts.grading.user.dto.request.UpdateUserRequest;
 import com.sinnts.grading.user.dto.request.UserRegistrationRequest;
 import com.sinnts.grading.user.dto.response.UserResponse;
+import com.sinnts.grading.utils.PaginationUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -67,7 +68,8 @@ public class UserService {
   }
 
   public ResponseEntity<PagedApiResponse<UserResponse>> getAllUsers(int page, int size) {
-    Pageable pageable = PageRequest.of(page, size);
+
+    Pageable pageable = PaginationUtils.getPageable(page, size);
     Page<User> usersPage = userRepository.findAll(pageable);
 
     if (usersPage.getContent().isEmpty())

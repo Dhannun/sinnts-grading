@@ -9,6 +9,7 @@ import com.sinnts.grading.universal.PagedApiResponse;
 import com.sinnts.grading.staff.dto.request.AddStaffRequest;
 import com.sinnts.grading.staff.dto.request.UpdateStaffRequest;
 import com.sinnts.grading.staff.dto.response.StaffResponse;
+import com.sinnts.grading.utils.PaginationUtils;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -71,8 +72,7 @@ public class StaffService {
   }
 
   public ResponseEntity<PagedApiResponse<StaffResponse>> getAllStaff(int page, int size) {
-    page = page == 0 ? 0 : page - 1;
-    Pageable pageable = PageRequest.of(page, size);
+    Pageable pageable = PaginationUtils.getPageable(page, size);
     Page<Staff> staffsPage = staffRepository.findAllOrderByCreatedDateDesc(pageable);
 
     if (staffsPage.getContent().isEmpty()) throw new ResourceNotFoundException("No staff record found");
@@ -175,12 +175,10 @@ public class StaffService {
   }
 
   public ResponseEntity<PagedApiResponse<StaffResponse>> getDepartmentStaffs(UUID departmentId, int page, int size) {
-    page = page == 0 ? 0 : page - 1;
     Department department = departmentRepository.findById(departmentId)
         .orElseThrow(() -> new ResourceNotFoundException("Department with ID [ %s ] not found".formatted(departmentId)));
 
-    Pageable pageable = PageRequest.of(page, size);
-
+    Pageable pageable = PaginationUtils.getPageable(page, size);
     Page<Staff> staffsByDepartmentPage = staffRepository.getStaffsByDepartment(department, pageable);
 
     if (staffsByDepartmentPage.getContent().isEmpty())

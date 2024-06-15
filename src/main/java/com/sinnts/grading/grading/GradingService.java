@@ -10,6 +10,7 @@ import com.sinnts.grading.staff.Staff;
 import com.sinnts.grading.staff.StaffRepository;
 import com.sinnts.grading.universal.ApiResponse;
 import com.sinnts.grading.universal.PagedApiResponse;
+import com.sinnts.grading.utils.PaginationUtils;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -69,8 +70,8 @@ public class GradingService {
   }
 
   public ResponseEntity<PagedApiResponse<GradingResponse>> getAllGrading(int page, int size) {
-    page = page == 0 ? 0 : page - 1;
-    Pageable pageable = PageRequest.of(page, size);
+
+    Pageable pageable = PaginationUtils.getPageable(page, size);
     Page<Grading> gradingPage = gradingRepository.findAllOrderByCreatedDateDesc(pageable);
 
     if (gradingPage.getContent().isEmpty())

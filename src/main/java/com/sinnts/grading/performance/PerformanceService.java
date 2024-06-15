@@ -9,6 +9,7 @@ import com.sinnts.grading.universal.PagedApiResponse;
 import com.sinnts.grading.performance.dto.request.AddPerformanceRequest;
 import com.sinnts.grading.performance.dto.request.UpdatePerformanceRequest;
 import com.sinnts.grading.performance.dto.response.PerformanceResponse;
+import com.sinnts.grading.utils.PaginationUtils;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -201,8 +202,8 @@ public class PerformanceService {
   }
 
   public ResponseEntity<PagedApiResponse<PerformanceResponse>> getDepartmentPerformance(UUID departmentId, int page, int size) {
-    page = page == 0 ? 0 : page - 1;
-    Pageable pageable = PageRequest.of(page, size);
+
+    Pageable pageable = PaginationUtils.getPageable(page, size);
     Page<Performance> performancePages = performanceRepository.findByDepartments_Id(departmentId, pageable);
 
     if (performancePages.getContent().isEmpty())

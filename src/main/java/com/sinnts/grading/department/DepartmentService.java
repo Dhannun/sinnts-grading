@@ -6,6 +6,7 @@ import com.sinnts.grading.department.dto.response.DepartmentResponse;
 import com.sinnts.grading.exceptions.ResourceNotFoundException;
 import com.sinnts.grading.universal.ApiResponse;
 import com.sinnts.grading.universal.PagedApiResponse;
+import com.sinnts.grading.utils.PaginationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -52,8 +53,8 @@ public class DepartmentService {
   }
 
   public ResponseEntity<PagedApiResponse<DepartmentResponse>> getAllDepartments(int page, int size) {
-    page = page == 0 ? 0 : page - 1;
-    Pageable pageable = PageRequest.of(page, size);
+
+    Pageable pageable = PaginationUtils.getPageable(page, size);
     Page<Department> departments = departmentRepository.findAllOrderByCreatedDateDesc(pageable);
 
     if (departments.getContent().isEmpty()) throw new ResourceNotFoundException("No Department Records Found");
