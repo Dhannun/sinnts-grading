@@ -1,6 +1,7 @@
 package com.sinnts.grading.universal;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,5 +21,6 @@ public class PagedApiResponse<T> {
   private List<T> data;
   private int pageNumber;
   private int totalPages;
+  @JsonProperty("isLastPage")
   private boolean isLastPage;
 }
