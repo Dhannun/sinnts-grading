@@ -199,7 +199,7 @@ public class StaffService {
             .data(
                 staffResponses
             )
-            .pageNumber(page + 1)
+            .pageNumber(page == 0 ? 1 : page)
             .totalPages(staffsByDepartmentPage.getTotalPages())
             .isLastPage(staffsByDepartmentPage.isLast())
             .build()

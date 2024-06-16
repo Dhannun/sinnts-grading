@@ -73,8 +73,7 @@ public class PerformanceService {
   }
 
   public ResponseEntity<PagedApiResponse<PerformanceResponse>> getAllPerformance(int page, int size) {
-    page = page == 0 ? 0 : page - 1;
-    Pageable pageable = PageRequest.of(page, size);
+    Pageable pageable = PaginationUtils.getPageable(page, size);
     Page<Performance> performancePages = performanceRepository.findAllOrderByCreatedDateDesc(pageable);
 
     if (performancePages.getContent().isEmpty()) throw new ResourceNotFoundException("No Department Records Found");
@@ -224,7 +223,7 @@ public class PerformanceService {
             .data(
                 performanceResponses
             )
-            .pageNumber(page + 1)
+            .pageNumber(page == 0 ? 1 : page)
             .totalPages(performancePages.getTotalPages())
             .isLastPage(performancePages.isLast())
             .build()

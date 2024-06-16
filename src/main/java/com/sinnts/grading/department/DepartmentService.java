@@ -69,7 +69,7 @@ public class DepartmentService {
             .data(
                 departmentResponseList
             )
-            .pageNumber(page + 1)
+            .pageNumber(page == 0 ? 1 : page)
             .totalPages(departments.getTotalPages())
             .isLastPage(departments.isLast())
             .build()
