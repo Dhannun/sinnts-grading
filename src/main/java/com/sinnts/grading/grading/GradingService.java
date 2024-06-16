@@ -14,7 +14,6 @@ import com.sinnts.grading.utils.PaginationUtils;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static com.sinnts.grading.mpastruct.MapstructMapper.INSTANCE;
@@ -84,8 +82,7 @@ public class GradingService {
     Staff staff = staffRepository.findById(staffId)
         .orElseThrow(() -> new ResourceNotFoundException("Staff with ID [ %s ] not found".formatted(staffId)));
 
-    page = page == 0 ? 0 : page - 1;
-    Pageable pageable = PageRequest.of(page, size);
+    Pageable pageable = PaginationUtils.getPageable(page, size);
 
     Page<Grading> staffGradingPage = gradingRepository.findByStaff(staff, pageable);
 
@@ -107,7 +104,7 @@ public class GradingService {
             .data(
                 gradingResponses
             )
-            .pageNumber(page + 1)
+            .pageNumber(page == 0 ? 1 : page)
             .totalPages(staffGradingPage.getTotalPages())
             .isLastPage(staffGradingPage.isLast())
             .build()

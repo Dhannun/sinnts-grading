@@ -85,7 +85,7 @@ public class UserService {
             .data(
                 userResponses
             )
-            .pageNumber(page + 1)
+            .pageNumber(page == 0 ? 1 : page)
             .totalPages(usersPage.getTotalPages())
             .isLastPage(usersPage.isLast())
             .build()
