@@ -145,6 +145,8 @@ public class CustomExceptionHandler {
         );
   }
 
+//  @ExceptionHandler(RoleExc)
+
   @ExceptionHandler(Exception.class)
   public final ResponseEntity<ExceptionResponse> handleException(Exception exception) {
 
