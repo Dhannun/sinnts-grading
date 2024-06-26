@@ -1,6 +1,6 @@
 services:
   sinnts-db:
-    image: postgres
+    image: postgres:16.3
     container_name: sinnts-db
     ports:
       - 2524:5432
