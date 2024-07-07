@@ -16,6 +16,9 @@ pipeline {
         REFRESH_TOKEN_EXPIRY = '2592000000'
 
         SCANNER_HOME = tool 'sonar-scanner'
+
+        DOCKER_IMAGE = 'dhannun/apps'
+        BUILD_TAG = "v1.0.0-${env.BUILD_ID}"
     }
 
     stages {
@@ -48,6 +51,14 @@ pipeline {
             }
         }
 
+        stage('Test') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+                }
+            }
+        }
+
 //         stage('OWASP Dependency Check') {
 //             steps {
 //                 // Ensure Dependency-Check runs and generates the report
@@ -60,7 +71,7 @@ pipeline {
         stage('OWASP Dependency Check') {
             steps {
                 dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'DC' // Path to check (pom.xlm)
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Report pattern
+                dependencyCheckPublisher pattern: './dependency-check-report.xml' // Report pattern
             }
         }
 
@@ -78,6 +89,29 @@ pipeline {
             }
         }
 
+        stage('Build and Tag Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t ${DOCKER_IMAGE}:${BUILD_TAG} ."
+                }
+            }
+        }
+
+        stage ('Docker Image Scan') {
+            steps {
+                sh "trivy image --format table -o trivy-image-scan.html ${DOCKER_IMAGE}:${BUILD_TAG}"
+            }
+        }
+
+        stage('Push to Docker Registry [Docker Hub]') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                        sh "docker push ${DOCKER_IMAGE}:${BUILD_TAG}"
+                    }
+                }
+            }
+        }
 
     }
 }
