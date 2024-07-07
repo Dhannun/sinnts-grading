@@ -48,21 +48,21 @@ pipeline {
             }
         }
 
+//         stage('OWASP Dependency Check') {
+//             steps {
+//                 // Ensure Dependency-Check runs and generates the report
+//                 sh 'mvn org.owasp:dependency-check-maven:check -Dformat=XML -DoutputDirectory=.'
+//                 // Collect OWASP Dependency-Check report
+//                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Ensure the pattern matches the report location
+//             }
+//         }
+
         stage('OWASP Dependency Check') {
             steps {
-                // Ensure Dependency-Check runs and generates the report
-                sh 'mvn org.owasp:dependency-check-maven:check -Dformat=XML -DoutputDirectory=.'
-                // Collect OWASP Dependency-Check report
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Ensure the pattern matches the report location
+                dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'DC' // Path to check (pom.xlm)
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Report pattern
             }
         }
-
-        // stage('OWASP Dependency Check') {
-        //     steps {
-        //         dependencyCheck additionalArguments: ' --scan ./', odcInstallation: 'DC' // Path to check (pom.xlm)
-        //         dependencyCheckPublisher pattern: './dependency-check-report.xml' // Report pattern
-        //     }
-        // }
 
         stage('Build') {
             steps {
