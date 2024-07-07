@@ -150,7 +150,7 @@ pipeline {
                             </div>
                         </body>
                     </html>
-                """,
+                """
 
                 emailext (
                     subject: "${jobName} - Build ${buildNumber} - ${pipelineStatus.toUpperCase()}",
