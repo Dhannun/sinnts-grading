@@ -51,9 +51,9 @@ pipeline {
         stage('OWASP Dependency Check') {
             steps {
                 // Ensure Dependency-Check runs and generates the report
-                sh 'mvn org.owasp:dependency-check-maven:check -Dformat=XML -DoutputDirectory=./dependency-check-report'
+                sh 'mvn org.owasp:dependency-check-maven:check -Dformat=XML -DoutputDirectory=.'
                 // Collect OWASP Dependency-Check report
-                dependencyCheckPublisher pattern: 'dependency-check-report/dependency-check-report.xml' // Ensure the pattern matches the report location
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Ensure the pattern matches the report location
             }
         }
 
