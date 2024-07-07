@@ -122,19 +122,35 @@ pipeline {
                 def pipelineStatus = currentBuild.result ?: 'UNKNOWN'
                 def bannerColor = pipelineStatus.toUpperCase() == 'SUCCESS' ? 'green' : 'red'
 
+//                 def body = """ // Aditya
+//                     <html>
+//                         <body>
+//                             <div style="border: 4px solid ${bannerColor}; padding: 10px;">
+//                                 <h2>${jobName} - Build ${buildNumber}</h2>
+//                                 <div style="background-color: ${bannerColor}; padding: 10px;">
+//                                     <h3 style="color: white;">Pipeline Status: ${pipelineStatus.toUpperCase()}</h3>
+//                                 </div>
+//                                 <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
+//                             </div>
+//                         </body>
+//                     </html>
+//                 """
+
                 def body = """
                     <html>
-                    <body>
-                    <div style="border: 4px solid ${bannerColor}; padding: 10px;">
-                    <h2>${jobName} - Build ${buildNumber}</h2>
-                    <div style="background-color: ${bannerColor}; padding: 10px;">
-                    <h3 style="color: white;">Pipeline Status: ${pipelineStatus.toUpperCase()}</h3>
-                    </div>
-                    <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
-                    </div>
-                    </body>
+                        <body>
+                            <div style="background-color: #FFA07A; padding: 10px; margin-bottom: 10px;">
+                                <p style="color: white; font-weight: bold;">Project: ${env.JOB_NAME}</p>
+                            </div>
+                            <div style="background-color: #90EE90; padding: 10px; margin-bottom: 10px;">
+                                <p style="color: white; font-weight: bold;">Build Number: ${env.BUILD_NUMBER}</p>
+                            </div>
+                            <div style="background-color: #87CEEB; padding: 10px; margin-bottom: 10px;">
+                                <p style="color: white; font-weight: bold;">URL: ${env.BUILD_URL}</p>
+                            </div>
+                        </body>
                     </html>
-                """
+                """,
 
                 emailext (
                     subject: "${jobName} - Build ${buildNumber} - ${pipelineStatus.toUpperCase()}",
