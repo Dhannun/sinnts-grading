@@ -97,11 +97,11 @@ pipeline {
             }
         }
 
-        stage ('Docker Image Scan') {
-            steps {
-                sh "trivy image --format table -o trivy-image-scan.html ${DOCKER_IMAGE}:${BUILD_TAG}"
-            }
-        }
+//         stage ('Docker Image Scan') {
+//             steps {
+//                 sh "trivy image --format table -o trivy-image-scan.html ${DOCKER_IMAGE}:${BUILD_TAG}"
+//             }
+//         }
 
         stage('Push to Docker Registry [Docker Hub]') {
             steps {
