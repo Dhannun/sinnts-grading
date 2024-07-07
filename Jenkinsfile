@@ -18,7 +18,7 @@ pipeline {
         SCANNER_HOME = tool 'sonar-scanner'
 
         DOCKER_IMAGE = 'dhannun/apps'
-        BUILD_TAG = "v1.0.0-${env.BUILD_ID}"
+        BUILD_TAG = "grading-v1.0.0-${env.BUILD_ID}"
     }
 
     stages {
@@ -51,7 +51,7 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Quality Gate Check') {
             steps {
                 script {
                     waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
