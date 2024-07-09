@@ -17,7 +17,7 @@ pipeline {
 
         SCANNER_HOME = tool 'sonar-scanner'
 
-        DOCKER_IMAGE = 'dhannun/apps'
+        DOCKER_IMAGE = 'dhannun/apis'
         BUILD_TAG = "grading-v1.0.0-${env.BUILD_ID}"
     }
 
