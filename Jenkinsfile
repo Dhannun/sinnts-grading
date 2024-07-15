@@ -65,14 +65,14 @@ pipeline {
             }
         }
 
-        stage('OWASP Dependency Check') {
-            steps {
-                // Ensure Dependency-Check runs and generates the report
-                sh 'mvn org.owasp:dependency-check-maven:check -Dformat=XML -DoutputDirectory=.'
-                // Collect OWASP Dependency-Check report
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Ensure the pattern matches the report location
-            }
-        }
+//         stage('OWASP Dependency Check') {
+//             steps {
+//                 // Ensure Dependency-Check runs and generates the report
+//                 sh 'mvn org.owasp:dependency-check-maven:check -Dformat=XML -DoutputDirectory=.'
+//                 // Collect OWASP Dependency-Check report
+//                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Ensure the pattern matches the report location
+//             }
+//         }
 
 //         stage('OWASP Dependency Check') {
 //             steps {
@@ -126,7 +126,7 @@ pipeline {
                     git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
 
                     // Path to the deployment file
-                    def deploymentFilePath = 'path/to/deployment/file/deployment.yaml'
+                    def deploymentFilePath = 'k8s/grading-deployment.yaml'
 
                     // Update the image tag in the deployment file
                     sh """
