@@ -17,11 +17,15 @@ pipeline {
 
         SCANNER_HOME = tool 'sonar-scanner'
 
-        DOCKER_IMAGE = 'dhannun/apis'
+        DOCKER_IMAGE = 'dhannun/apps'
         BUILD_TAG = "grading-v1.0.0-${env.BUILD_ID}"
     }
 
     stages {
+        stage('Cleaning Workspace') {
+
+        }
+
         stage('Git Checkout') {
             steps {
                 git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/Dhannun/sinnts-grading.git'
