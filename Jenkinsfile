@@ -65,21 +65,21 @@ pipeline {
             }
         }
 
-//         stage('OWASP Dependency Check') {
-//             steps {
-//                 // Ensure Dependency-Check runs and generates the report
-//                 sh 'mvn org.owasp:dependency-check-maven:check -Dformat=XML -DoutputDirectory=.'
-//                 // Collect OWASP Dependency-Check report
-//                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Ensure the pattern matches the report location
-//             }
-//         }
-
         stage('OWASP Dependency Check') {
             steps {
-                dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'DC' // Path to check (pom.xlm)
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Report pattern
+                // Ensure Dependency-Check runs and generates the report
+                sh 'mvn org.owasp:dependency-check-maven:check -Dformat=XML -DoutputDirectory=.'
+                // Collect OWASP Dependency-Check report
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Ensure the pattern matches the report location
             }
         }
+
+//         stage('OWASP Dependency Check') {
+//             steps {
+//                 dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'DC' // Path to check (pom.xlm)
+//                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Report pattern
+//             }
+//         }
 
         stage('Build') {
             steps {
@@ -114,6 +114,38 @@ pipeline {
                 script {
                     withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
                         sh "docker push ${DOCKER_IMAGE}:${BUILD_TAG}"
+                    }
+                }
+            }
+        }
+
+        stage('Update Deployment File and Push to Repo') {
+            steps {
+                script {
+                    // Clone the argocd repository with authentication
+                    git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
+
+                    // Path to the deployment file
+                    def deploymentFilePath = 'path/to/deployment/file/deployment.yaml'
+
+                    // Update the image tag in the deployment file
+                    sh """
+                    sed -i 's|image: dhannun/apis:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|' ${deploymentFilePath}
+                    """
+
+                    // Configure Git
+                    sh """
+                    git config user.email "abudukhanyunus@gmail.com"
+                    git config user.name "Dhannun"
+                    """
+
+                    // Commit and push the changes with authentication
+                    withCredentials([usernamePassword(credentialsId: 'git-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh """
+                        git add ${deploymentFilePath}
+                        git commit -m "Update deployment file with new image tag ${DOCKER_IMAGE}:${BUILD_TAG}"
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git main
+                        """
                     }
                 }
             }
