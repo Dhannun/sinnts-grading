@@ -97,19 +97,25 @@ pipeline {
             }
         }
 
+        stage('Cleaning Workspace For ArgoCD') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Git Checkout') {
+            steps {
+                git branch: 'staging', credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
+            }
+        }
+
         stage('Update ArgoCD Deployment') {
             steps {
-                cleanWs() // Clean the workspace before cloning the ArgoCD repository
                 script {
                     withCredentials([usernamePassword(credentialsId: 'git-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                        // Clone the ArgoCD repository
                         sh '''
-                        git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git
-                        '''
-
-                        // Update the deployment file in the staging branch
-                        sh '''
-                        git checkout staging
+                        pwd
+                        ls
                         sed -i 's|image: dhannun/apps:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|g' k8s/grading-deployment.yaml
                         git add k8s/grading-deployment.yaml
                         git commit -m "Update image tag to ${DOCKER_IMAGE}:${BUILD_TAG}"
