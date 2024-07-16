@@ -123,7 +123,7 @@ pipeline {
             steps {
                 script {
                     def branches = ['staging'] // Can Add Multiple Branches
-                    def deploymentFilePath = 'path/to/deployment/file/deployment.yaml'
+                    def deploymentFilePath = 'k8s/grading-deployment.yaml'
 
                     branches.each { branch ->
                         // Clone the argocd repository with authentication
