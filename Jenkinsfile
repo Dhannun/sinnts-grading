@@ -119,37 +119,71 @@ pipeline {
             }
         }
 
-        stage('Update Deployment File and Push to Repo') {
+        stage('Update Deployment Files and Push to Repos') {
             steps {
                 script {
-                    // Clone the argocd repository with authentication
-                    git branch: 'staging', credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
+                    def branches = ['staging'] // Can Add Multiple Branches
+                    def deploymentFilePath = 'path/to/deployment/file/deployment.yaml'
 
-                    // Path to the deployment file
-                    def deploymentFilePath = 'k8s/grading-deployment.yaml'
+                    branches.each { branch ->
+                        // Clone the argocd repository with authentication
+                        git branch: branch, credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
 
-                    // Update the image tag in the deployment file
-                    sh """
-                    sed -i 's|image: dhannun/apis:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|' ${deploymentFilePath}
-                    """
-
-                    // Configure Git
-                    sh """
-                    git config user.email "abudukhanyunus@gmail.com"
-                    git config user.name "Dhannun"
-                    """
-
-                    // Commit and push the changes with authentication
-                    withCredentials([usernamePassword(credentialsId: 'git-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        // Update the image tag in the deployment file
                         sh """
-                        git add ${deploymentFilePath}
-                        git commit -m "Update deployment file with new image tag ${DOCKER_IMAGE}:${BUILD_TAG}"
-                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git staging
+                        sed -i 's|image: dhannun/apis:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|' ${deploymentFilePath}
                         """
+
+                        // Configure Git
+                        sh """
+                        git config user.email "jenkins@example.com"
+                        git config user.name "Jenkins"
+                        """
+
+                        // Commit and push the changes with authentication
+                        withCredentials([usernamePassword(credentialsId: 'git-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                            sh """
+                            git add ${deploymentFilePath}
+                            git commit -m "Update deployment file with new image tag ${DOCKER_IMAGE}:${BUILD_TAG}"
+                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git ${branch}
+                            """
+                        }
                     }
                 }
             }
         }
+
+//         stage('Update Deployment File and Push to Repo') {
+//             steps {
+//                 script {
+//                     // Clone the argocd repository with authentication
+//                     git branch: 'staging', credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
+//
+//                     // Path to the deployment file
+//                     def deploymentFilePath = 'k8s/grading-deployment.yaml'
+//
+//                     // Update the image tag in the deployment file
+//                     sh """
+//                     sed -i 's|image: dhannun/apis:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|' ${deploymentFilePath}
+//                     """
+//
+//                     // Configure Git
+//                     sh """
+//                     git config user.email "abudukhanyunus@gmail.com"
+//                     git config user.name "Dhannun"
+//                     """
+//
+//                     // Commit and push the changes with authentication
+//                     withCredentials([usernamePassword(credentialsId: 'git-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+//                         sh """
+//                         git add ${deploymentFilePath}
+//                         git commit -m "Update deployment file with new image tag ${DOCKER_IMAGE}:${BUILD_TAG}"
+//                         git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git staging
+//                         """
+//                     }
+//                 }
+//             }
+//         }
     }
 
     post {
