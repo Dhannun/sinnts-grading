@@ -123,7 +123,7 @@ pipeline {
             steps {
                 script {
                     // Clone the argocd repository with authentication
-                    git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
+                    git branch: 'staging', credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
 
                     // Path to the deployment file
                     def deploymentFilePath = 'k8s/grading-deployment.yaml'
@@ -144,7 +144,7 @@ pipeline {
                         sh """
                         git add ${deploymentFilePath}
                         git commit -m "Update deployment file with new image tag ${DOCKER_IMAGE}:${BUILD_TAG}"
-                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git main
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git staging
                         """
                     }
                 }
