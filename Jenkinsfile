@@ -65,22 +65,6 @@ pipeline {
             }
         }
 
-//         stage('OWASP Dependency Check') {
-//             steps {
-//                 // Ensure Dependency-Check runs and generates the report
-//                 sh 'mvn org.owasp:dependency-check-maven:check -Dformat=XML -DoutputDirectory=.'
-//                 // Collect OWASP Dependency-Check report
-//                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Ensure the pattern matches the report location
-//             }
-//         }
-
-//         stage('OWASP Dependency Check') {
-//             steps {
-//                 dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'DC' // Path to check (pom.xlm)
-//                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Report pattern
-//             }
-//         }
-
         stage('Build') {
             steps {
                 sh 'mvn package'
@@ -103,12 +87,6 @@ pipeline {
             }
         }
 
-//         stage ('Docker Image Scan') {
-//             steps {
-//                 sh "trivy image --format table -o trivy-image-scan.html ${DOCKER_IMAGE}:${BUILD_TAG}"
-//             }
-//         }
-
         stage('Push to Docker Registry [Docker Hub]') {
             steps {
                 script {
@@ -119,33 +97,25 @@ pipeline {
             }
         }
 
-        stage('Update Deployment File and Push to Repo') {
+        stage('Update ArgoCD Deployment') {
             steps {
+                cleanWs() // Clean the workspace before cloning the ArgoCD repository
                 script {
-                    // Clone the argocd repository with authentication
-                    git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
-
-                    // Path to the deployment file
-                    def deploymentFilePath = 'k8s/grading-deployment.yaml'
-
-                    // Update the image tag in the deployment file
-                    sh """
-                    sed -i 's|image: dhannun/apis:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|' ${deploymentFilePath}
-                    """
-
-                    // Configure Git
-                    sh """
-                    git config user.email "abudukhanyunus@gmail.com"
-                    git config user.name "Dhannun"
-                    """
-
-                    // Commit and push the changes with authentication
                     withCredentials([usernamePassword(credentialsId: 'git-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                        sh """
-                        git add ${deploymentFilePath}
-                        git commit -m "Update deployment file with new image tag ${DOCKER_IMAGE}:${BUILD_TAG}"
-                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git main
-                        """
+                        // Clone the ArgoCD repository
+                        sh '''
+                        git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git
+                        cd argocd
+                        '''
+
+                        // Update the deployment file in the staging branch
+                        sh '''
+                        git checkout staging
+                        sed -i 's|image: dhannun/apps:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|g' k8s/grading-deployment.yaml
+                        git add k8s/grading-deployment.yaml
+                        git commit -m "Update image tag to ${DOCKER_IMAGE}:${BUILD_TAG}"
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git staging
+                        '''
                     }
                 }
             }
@@ -159,20 +129,6 @@ pipeline {
                 def buildNumber = env.BUILD_NUMBER
                 def pipelineStatus = currentBuild.result ?: 'UNKNOWN'
                 def bannerColor = pipelineStatus.toUpperCase() == 'SUCCESS' ? 'green' : 'red'
-
-//                 def body = """ // Aditya
-//                     <html>
-//                         <body>
-//                             <div style="border: 4px solid ${bannerColor}; padding: 10px;">
-//                                 <h2>${jobName} - Build ${buildNumber}</h2>
-//                                 <div style="background-color: ${bannerColor}; padding: 10px;">
-//                                     <h3 style="color: white;">Pipeline Status: ${pipelineStatus.toUpperCase()}</h3>
-//                                 </div>
-//                                 <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
-//                             </div>
-//                         </body>
-//                     </html>
-//                 """
 
                 def body = """
                     <html>
