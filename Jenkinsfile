@@ -103,7 +103,7 @@ pipeline {
             }
         }
 
-        stage('Git Checkout') {
+        stage('Git Checkout ArgoCD') {
             steps {
                 git branch: 'staging', credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
             }
