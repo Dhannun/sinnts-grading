@@ -65,14 +65,14 @@ pipeline {
             }
         }
 
-//         stage('OWASP Dependency Check') {
-//             steps {
-//                 // Ensure Dependency-Check runs and generates the report
-//                 sh 'mvn org.owasp:dependency-check-maven:check -Dformat=XML -DoutputDirectory=.'
-//                 // Collect OWASP Dependency-Check report
-//                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Ensure the pattern matches the report location
-//             }
-//         }
+        stage('OWASP Dependency Check') {
+            steps {
+                // Ensure Dependency-Check runs and generates the report
+                sh 'mvn org.owasp:dependency-check-maven:check -Dformat=XML -DoutputDirectory=.'
+                // Collect OWASP Dependency-Check report
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml' // Ensure the pattern matches the report location
+            }
+        }
 
 //         stage('OWASP Dependency Check') {
 //             steps {
@@ -119,76 +119,37 @@ pipeline {
             }
         }
 
-
-        stage('Update Deployment Files and Push to Repos') {
+        stage('Update Deployment File and Push to Repo') {
             steps {
                 script {
-                    def branches = ['staging'] // Can Add Multiple Branches
+                    // Clone the argocd repository with authentication
+                    git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
+
+                    // Path to the deployment file
                     def deploymentFilePath = 'k8s/grading-deployment.yaml'
 
-                    branches.each { branch ->
-                        // Clone the argocd repository with authentication
-                        git branch: branch, credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
+                    // Update the image tag in the deployment file
+                    sh """
+                    sed -i 's|image: dhannun/apis:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|' ${deploymentFilePath}
+                    """
 
-                        // Update the image tag in the deployment file
-                        sh """
-                        sed -i 's|image: dhannun/apis:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|' ${deploymentFilePath}
-                        """
+                    // Configure Git
+                    sh """
+                    git config user.email "abudukhanyunus@gmail.com"
+                    git config user.name "Dhannun"
+                    """
 
-                        // Configure Git
-                        sh """
-                        git config user.email "abudukhanyunus@gmail.com"
-                        git config user.name "Dhannun"
-                        """
-
-                        // Add changes and handle untracked files
+                    // Commit and push the changes with authentication
+                    withCredentials([usernamePassword(credentialsId: 'git-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         sh """
                         git add ${deploymentFilePath}
-                        git commit -m "Update deployment file with new image tag ${DOCKER_IMAGE}:${BUILD_TAG}" || echo "No changes to commit"
+                        git commit -m "Update deployment file with new image tag ${DOCKER_IMAGE}:${BUILD_TAG}"
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git main
                         """
-
-                        // Commit and push the changes with authentication
-                        withCredentials([usernamePassword(credentialsId: 'git-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                            sh """
-                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git ${branch}
-                            """
-                        }
                     }
                 }
             }
         }
-
-//         stage('Update Deployment File and Push to Repo') {
-//             steps {
-//                 script {
-//                     // Clone the argocd repository with authentication
-//                     git branch: 'staging', credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
-//
-//                     // Path to the deployment file
-//                     def deploymentFilePath = 'k8s/grading-deployment.yaml'
-//
-//                     // Update the image tag in the deployment file
-//                     sh """
-//                     sed -i 's|image: dhannun/apis:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|' ${deploymentFilePath}
-//                     """
-//
-//                     // Configure Git
-//                     sh """
-//                     git config user.email "abudukhanyunus@gmail.com"
-//                     git config user.name "Dhannun"
-//                     """
-//
-//                     // Commit and push the changes with authentication
-//                     withCredentials([usernamePassword(credentialsId: 'git-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-//                         sh """
-//                         git add ${deploymentFilePath}
-//                         git commit -m "Update deployment file with new image tag ${DOCKER_IMAGE}:${BUILD_TAG}"
-//                         git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git staging
-//                         """
-//                     }
-//                 }
-//             }
-//         }
     }
 
     post {
