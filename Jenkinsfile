@@ -105,7 +105,6 @@ pipeline {
                         // Clone the ArgoCD repository
                         sh '''
                         git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git
-                        cd argocd
                         '''
 
                         // Update the deployment file in the staging branch
