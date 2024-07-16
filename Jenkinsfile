@@ -119,39 +119,39 @@ pipeline {
             }
         }
 
-        stage('Update Deployment Files and Push to Repos') {
-            steps {
-                script {
-                    def branches = ['staging'] // Can Add Multiple Branches
-                    def deploymentFilePath = 'k8s/grading-deployment.yaml'
+         stage('Update Deployment Files and Push to Repos') {
+                    steps {
+                        script {
+                            def branches = ['staging'] // Can Add Multiple Branches
+                            def deploymentFilePath = 'k8s/grading-deployment.yaml'
 
-                    branches.each { branch ->
-                        // Clone the argocd repository with authentication
-                        git branch: branch, credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
+                            branches.each { branch ->
+                                // Clone the argocd repository with authentication
+                                git branch: branch, credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
 
-                        // Update the image tag in the deployment file
-                        sh """
-                        sed -i 's|image: dhannun/apis:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|' ${deploymentFilePath}
-                        """
+                                // Update the image tag in the deployment file
+                                sh """
+                                sed -i 's|image: dhannun/apis:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|' ${deploymentFilePath}
+                                """
 
-                        // Configure Git
-                        sh """
-                        git config user.email "jenkins@example.com"
-                        git config user.name "Jenkins"
-                        """
+                                // Configure Git
+                                sh """
+                                git config user.email "jenkins@example.com"
+                                git config user.name "Jenkins"
+                                """
 
-                        // Commit and push the changes with authentication
-                        withCredentials([usernamePassword(credentialsId: 'git-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                            sh """
-                            git add ${deploymentFilePath}
-                            git commit -m "Update deployment file with new image tag ${DOCKER_IMAGE}:${BUILD_TAG}"
-                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git ${branch}
-                            """
+                                // Commit and push the changes with authentication
+                                withCredentials([usernamePassword(credentialsId: 'git-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                                    sh """
+                                    git add ${deploymentFilePath}
+                                    git commit -m "Update deployment file with new image tag ${DOCKER_IMAGE}:${BUILD_TAG}" || echo "No changes to commit"
+                                    git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git ${branch}
+                                    """
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
 
 //         stage('Update Deployment File and Push to Repo') {
 //             steps {
