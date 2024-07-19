@@ -37,8 +37,8 @@ public class SecurityConfig {
    * And the remaining are for OpenAPI (Swagger) Documentations
    */
   private static final String[] WHITE_LIST = {
-      "/ping",
-      "/auth/**",
+      "/",
+      "/api/v1/auth/**",
       "/v2/api-docs",
       "/v3/api-docs",
       "/v3/api-docs/**",
@@ -59,6 +59,11 @@ public class SecurityConfig {
    */
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    final String USERS_SECURED_ROUTE = "/api/v1/users/**";
+    final String DEPARTMENT_SECURED_ROUTE = "/api/v1/departments/**";
+    final String STAFF_SECURED_ROUTE = "/api/v1/staffs/**";
+    final String PERFORMANCE_SECURED_ROUTE = "/api/v1/performances/**";
+    final String GRADING_SECURED_ROUTE = "/api/v1/gradings/**";
     http
         .cors(withDefaults())
         .csrf(AbstractHttpConfigurer::disable)
@@ -69,60 +74,60 @@ public class SecurityConfig {
                 ).permitAll()
 
                 // Role Based Authorization [ Users Endpoints ]
-                .requestMatchers("/users/**").hasAnyRole(
+                .requestMatchers(USERS_SECURED_ROUTE).hasAnyRole(
                     SUPER_ADMIN.name(),
                     ADMIN.name()
                 )
 
                 // Permission Based Authorization [ Users Endpoints ]
-                .requestMatchers(POST, "/users/**").hasAuthority(SUPER_ADMIN_CREATE.name())
-                .requestMatchers(GET, "/users/**").hasAnyAuthority(SUPER_ADMIN_READ.name(), ADMIN_READ.name())
-                .requestMatchers(PUT, "/users/**").hasAnyAuthority(SUPER_ADMIN_UPDATE.name())
-                .requestMatchers(DELETE, "/users/**").hasAuthority(SUPER_ADMIN_DELETE.name())
+                .requestMatchers(POST, USERS_SECURED_ROUTE).hasAuthority(SUPER_ADMIN_CREATE.name())
+                .requestMatchers(GET, USERS_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_READ.name(), ADMIN_READ.name())
+                .requestMatchers(PUT, USERS_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_UPDATE.name())
+                .requestMatchers(DELETE, USERS_SECURED_ROUTE).hasAuthority(SUPER_ADMIN_DELETE.name())
 
                 // Role Based Authorization [ Departments Endpoints ]
-                .requestMatchers("/departments/**").hasAnyRole(
+                .requestMatchers(DEPARTMENT_SECURED_ROUTE).hasAnyRole(
                     SUPER_ADMIN.name(),
                     ADMIN.name()
                 )
                 // Permission Based Authorization [ Departments Endpoints ]
-                .requestMatchers(POST, "/departments/**").hasAnyAuthority(SUPER_ADMIN_CREATE.name(), ADMIN_CREATE.name())
-                .requestMatchers(GET, "/departments/**").hasAnyAuthority(SUPER_ADMIN_READ.name(), ADMIN_READ.name())
-                .requestMatchers(PUT, "/departments/**").hasAnyAuthority(SUPER_ADMIN_UPDATE.name(), ADMIN_UPDATE.name())
-                .requestMatchers(DELETE, "/departments/**").hasAnyAuthority(SUPER_ADMIN_DELETE.name(), ADMIN_DELETE.name())
+                .requestMatchers(POST, DEPARTMENT_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_CREATE.name(), ADMIN_CREATE.name())
+                .requestMatchers(GET, DEPARTMENT_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_READ.name(), ADMIN_READ.name())
+                .requestMatchers(PUT, DEPARTMENT_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_UPDATE.name(), ADMIN_UPDATE.name())
+                .requestMatchers(DELETE, DEPARTMENT_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_DELETE.name(), ADMIN_DELETE.name())
 
                 // Role Based Authorization [ Staffs Endpoints ]
-                .requestMatchers("/staffs/**").hasAnyRole(
+                .requestMatchers(STAFF_SECURED_ROUTE).hasAnyRole(
                     SUPER_ADMIN.name(),
                     ADMIN.name()
                 )
                 // Permission Based Authorization [ Departments Endpoints ]
-                .requestMatchers(POST, "/staffs/**").hasAnyAuthority(SUPER_ADMIN_CREATE.name(), ADMIN_CREATE.name())
-                .requestMatchers(GET, "/staffs/**").hasAnyAuthority(SUPER_ADMIN_READ.name(), ADMIN_READ.name())
-                .requestMatchers(PUT, "/staffs/**").hasAnyAuthority(SUPER_ADMIN_UPDATE.name(), ADMIN_UPDATE.name())
-                .requestMatchers(DELETE, "/staffs/**").hasAnyAuthority(SUPER_ADMIN_DELETE.name(), ADMIN_DELETE.name())
+                .requestMatchers(POST, STAFF_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_CREATE.name(), ADMIN_CREATE.name())
+                .requestMatchers(GET, STAFF_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_READ.name(), ADMIN_READ.name())
+                .requestMatchers(PUT, STAFF_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_UPDATE.name(), ADMIN_UPDATE.name())
+                .requestMatchers(DELETE, STAFF_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_DELETE.name(), ADMIN_DELETE.name())
 
                 // Role Based Authorization [ Performances Endpoints ]
-                .requestMatchers("/performances/**").hasAnyRole(
+                .requestMatchers(PERFORMANCE_SECURED_ROUTE).hasAnyRole(
                     SUPER_ADMIN.name(),
                     ADMIN.name()
                 )
                 // Permission Based Authorization [ Performances Endpoints ]
-                .requestMatchers(POST, "/performances/**").hasAnyAuthority(SUPER_ADMIN_CREATE.name(), ADMIN_CREATE.name())
-                .requestMatchers(GET, "/performances/**").hasAnyAuthority(SUPER_ADMIN_READ.name(), ADMIN_READ.name())
-                .requestMatchers(PUT, "/performances/**").hasAnyAuthority(SUPER_ADMIN_UPDATE.name(), ADMIN_UPDATE.name())
-                .requestMatchers(DELETE, "/performances/**").hasAnyAuthority(SUPER_ADMIN_DELETE.name(), ADMIN_DELETE.name())
+                .requestMatchers(POST, PERFORMANCE_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_CREATE.name(), ADMIN_CREATE.name())
+                .requestMatchers(GET, PERFORMANCE_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_READ.name(), ADMIN_READ.name())
+                .requestMatchers(PUT, PERFORMANCE_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_UPDATE.name(), ADMIN_UPDATE.name())
+                .requestMatchers(DELETE, PERFORMANCE_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_DELETE.name(), ADMIN_DELETE.name())
 
                 // Role Based Authorization [ Gradings Endpoints ]
-                .requestMatchers("/gradings/**").hasAnyRole(
+                .requestMatchers(GRADING_SECURED_ROUTE).hasAnyRole(
                     SUPER_ADMIN.name(),
                     ADMIN.name()
                 )
                 // Permission Based Authorization [ Gradings Endpoints ]
-                .requestMatchers(POST, "/gradings/**").hasAnyAuthority(SUPER_ADMIN_CREATE.name(), ADMIN_CREATE.name())
-                .requestMatchers(GET, "/gradings/**").hasAnyAuthority(SUPER_ADMIN_READ.name(), ADMIN_READ.name())
-                .requestMatchers(PUT, "/gradings/**").hasAnyAuthority(SUPER_ADMIN_UPDATE.name(), ADMIN_UPDATE.name())
-                .requestMatchers(DELETE, "/gradings/**").hasAnyAuthority(SUPER_ADMIN_DELETE.name(), ADMIN_DELETE.name())
+                .requestMatchers(POST, GRADING_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_CREATE.name(), ADMIN_CREATE.name())
+                .requestMatchers(GET, GRADING_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_READ.name(), ADMIN_READ.name())
+                .requestMatchers(PUT, GRADING_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_UPDATE.name(), ADMIN_UPDATE.name())
+                .requestMatchers(DELETE, GRADING_SECURED_ROUTE).hasAnyAuthority(SUPER_ADMIN_DELETE.name(), ADMIN_DELETE.name())
 
                 .anyRequest()
                 .authenticated()
@@ -136,7 +141,7 @@ public class SecurityConfig {
         .logout(
             logout ->
                 logout.addLogoutHandler(logoutHandler)
-                    .logoutUrl("/auth/logout")
+                    .logoutUrl("/api/v1/auth/logout")
                     .logoutSuccessHandler(
                         (request, response, authentication) -> SecurityContextHolder.clearContext()
                     )

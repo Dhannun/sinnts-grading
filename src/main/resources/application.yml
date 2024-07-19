@@ -1,7 +1,6 @@
 server:
   port: ${PORT}
-  servlet:
-    context-path: /api/v1
+
 spring:
   application:
     name: sinnts-grading
