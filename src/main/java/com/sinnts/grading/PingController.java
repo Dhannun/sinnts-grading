@@ -14,7 +14,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Tag(name = "Health Check Controller")
 public class PingController {
-  @GetMapping("/ping")
+  @GetMapping
   public ResponseEntity<Map<String, String>> ping() {
     return ResponseEntity.ok(
         Map.of("message", "Pong")

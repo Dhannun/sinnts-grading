@@ -103,7 +103,7 @@ pipeline {
             }
         }
 
-        stage('Git Checkout') {
+        stage('Git Checkout ArgoCD') {
             steps {
                 git branch: 'staging', credentialsId: 'git-cred', url: 'https://github.com/Dhannun/argocd.git'
             }
@@ -113,14 +113,14 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'git-cred', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                        sh '''
-                        pwd
-                        ls
+                        sh """
+                        git config --global user.email "abudukhanyunus@gmail.com"
+                        git config --global user.name "Dhannun"
                         sed -i 's|image: dhannun/apps:.*|image: ${DOCKER_IMAGE}:${BUILD_TAG}|g' k8s/grading-deployment.yaml
                         git add k8s/grading-deployment.yaml
                         git commit -m "Update image tag to ${DOCKER_IMAGE}:${BUILD_TAG}"
                         git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Dhannun/argocd.git staging
-                        '''
+                        """
                     }
                 }
             }

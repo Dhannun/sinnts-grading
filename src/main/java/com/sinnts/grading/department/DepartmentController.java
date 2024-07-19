@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/departments")
+@RequestMapping("/api/v1/departments")
 @RequiredArgsConstructor
 @Tag(name = "Department Controller")
 @SecurityRequirement(name = "BearerAuth")

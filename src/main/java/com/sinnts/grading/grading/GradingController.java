@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/gradings")
+@RequestMapping("/api/v1/gradings")
 @RequiredArgsConstructor
 @Tag(name = "Grading Controller")
 @SecurityRequirement(name = "BearerAuth")
